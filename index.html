@@ -52,7 +52,7 @@ button.primary:hover{filter:brightness(1.08)}
 button.ghost{background:transparent;border-color:transparent;color:var(--muted);padding:4px 8px}
 button.ghost:hover{color:var(--crit);background:var(--surface2)}
 button.danger{color:var(--crit)}
-button.step{width:32px;height:32px;padding:0;font-size:1.1rem;line-height:1;border-radius:50%}
+button.step{width:26px;height:26px;padding:0;font-size:1rem;line-height:1;border-radius:50%}
 .lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
 .num{font-variant-numeric:tabular-nums}
 .muted{color:var(--muted)}
@@ -69,13 +69,13 @@ button.step{width:32px;height:32px;padding:0;font-size:1.1rem;line-height:1;bord
 .who{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .who h1{font-size:1.55rem;line-height:1.1;font-weight:700}
 .who .sub{color:var(--muted);font-size:.9rem}
-.vital{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;padding:0 4px;min-width:56px}
-.vital .big{font-size:1.7rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
-.vital .big.magic{color:var(--magic)}
+.vital{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;padding:0 4px;min-width:56px}
+.vital .big{font-size:1.5rem;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.vital .big.magic{color:var(--magic);font-size:1.35rem}
 .vital .sub{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .tracker{display:flex;align-items:center;gap:4px}
-.tracker input{width:56px;font-size:1.35rem;font-weight:700;padding:2px 4px;background:transparent;border:1px solid var(--line)}
-.tracker .max{font-size:1rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tracker input{width:46px;font-size:1.15rem;font-weight:700;padding:1px 3px;background:transparent;border:1px solid var(--line)}
+.tracker .max{font-size:.95rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .saves{display:flex;gap:6px}
 .saves .sv{display:flex;flex-direction:column;align-items:center;min-width:40px}
 .saves .sv b{font-size:1.25rem;line-height:1.1;font-variant-numeric:tabular-nums}
@@ -107,15 +107,15 @@ main{max-width:1240px;margin:0 auto;padding:14px 16px 64px}
 /* ---------- attributes ---------- */
 .attrs{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
 @media (max-width:700px){.attrs{grid-template-columns:repeat(3,1fr)}}
-.attr{background:var(--surface2);border-radius:8px;padding:8px 6px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:118px}
-.attr .lbl{font-size:.8rem}
-.attr input.score{width:64px;font-size:1.6rem;font-weight:700;padding:2px;background:var(--surface);border:1px solid var(--line)}
-.attr .mod{font-size:1.1rem;font-weight:700;font-variant-numeric:tabular-nums}
-.attr .adj{display:flex;align-items:center;gap:3px;font-size:.72rem;color:var(--muted)}
+.attr{background:var(--surface2);border-radius:8px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;min-height:96px}
+.attr .lbl{display:block;margin-bottom:2px}
+.attr input.score{width:64px;font-size:1.7rem;line-height:1.05;font-weight:700;padding:0 2px;background:var(--surface);border:1px solid var(--line);height:auto}
+.attr .mod{font-size:.95rem;font-weight:700;font-variant-numeric:tabular-nums;margin-top:3px}
+.attr .adj{display:flex;align-items:center;gap:3px;font-size:.72rem;color:var(--muted);margin-top:4px}
 .attr .adj input{width:36px;font-size:.8rem;padding:1px}
 
 .save-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.save-tile{background:var(--surface2);border-radius:8px;padding:10px 8px;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:118px}
+.save-tile{background:var(--surface2);border-radius:8px;padding:10px 8px;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:96px}
 .save-tile b{display:block;font-size:1.7rem;line-height:1.05;font-variant-numeric:tabular-nums}
 .save-tile .lbl{display:block;margin-bottom:2px}
 .save-tile .hint{margin-top:3px}
@@ -136,7 +136,9 @@ tr.untrained td.calc{color:var(--muted)}
 
 /* ---------- misc components ---------- */
 .list-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.pool{display:flex;align-items:center;gap:12px;background:var(--magic-soft);border-radius:8px;padding:10px 12px;flex-wrap:wrap}
+.pool{display:flex;align-items:center;gap:12px;background:var(--magic-soft);border-radius:8px;padding:10px 14px;flex-wrap:wrap}
+body[data-mode="play"] .pv #pools{flex-direction:row;flex-wrap:wrap;gap:10px}
+body[data-mode="play"] .pv .pool{display:inline-flex;padding:8px 16px}
 .pool .big{font-size:1.6rem;font-weight:700;color:var(--magic);font-variant-numeric:tabular-nums}
 .pool .formula{font-size:.8rem;color:var(--muted);flex:1 1 200px}
 .pool .adj{display:flex;align-items:center;gap:6px;font-size:.8rem}
@@ -189,7 +191,7 @@ body[data-mode="play"] .pv #skills .sk-sel{width:auto}
 .toast.show{opacity:1}
 .fx-list{display:flex;flex-direction:column;gap:6px}
 .fx{display:grid;grid-template-columns:1fr 76px auto;gap:6px 8px;align-items:center}
-.fx textarea{min-height:36px;grid-column:1/-1}
+.fx textarea{min-height:36px;grid-column:1/-1;field-sizing:content}
 .sr{position:absolute;left:-9999px}
 .untr{font-size:.5rem;color:var(--muted);opacity:.7;vertical-align:super;margin-left:1px}
 button.rm{padding:2px 8px;font-size:.8rem;color:var(--muted)}
@@ -201,7 +203,7 @@ body[data-mode="play"] .pv select:not(.play-edit){background-image:none;padding-
 body[data-mode="play"] .pv input[type=checkbox]:not(.play-edit){pointer-events:none}
 body[data-mode="play"] .pv textarea:not(.play-edit){field-sizing:content;min-height:0;resize:none}
 body[data-mode="play"] .pv ::placeholder{color:transparent}
-body[data-mode="play"] .pv .attr input.score{background:transparent;border-color:transparent}
+body[data-mode="play"] .pv .attr input.score{background:transparent;border-color:transparent;padding:0}
 body[data-mode="play"] .pv td input:not(.play-edit),body[data-mode="play"] .pv td select:not(.play-edit){padding-left:2px;padding-right:2px;width:auto;min-width:2ch;max-width:100%;field-sizing:content}
 body[data-mode="play"] .pv td .w-name input{min-width:8ch}
 body[data-mode="play"] .pv .field .lbl{opacity:.85}
@@ -384,7 +386,7 @@ body[data-mode="play"] .pv .fx textarea{padding-top:0}
 <section data-panel="magic" class="pv">
 <div class="grid">
   <div class="panel span12" id="effortPanel">
-    <div class="panel-head"><h2>Effort</h2><span class="hint edit-only">Committed effort is the sum of the arts in use below. Use the adjust box for anything tracked by hand.</span></div>
+    <div class="panel-head"><h2>Effort</h2><span class="hint edit-only">Free effort = maximum − the cost of every art in use below.</span></div>
     <div id="pools" class="fx-list"></div>
   </div>
   <div class="panel span12" id="spellPanel">
@@ -637,15 +639,15 @@ const ARTS_DATA={
   ['Healing Touch','Scene',1,'Heal 2d6 + Heal to a touched ally as a Main Action; +1 strain to target'],
   ['Empowered Healer','None',0,'Healing Touch adds your level to the healing'],
   ['Facile Healer','None',0,'Healing Touch needs no Effort commitment'],
-  ['Far Healer','Scene',1,'Healing Touch works on a visible target within 10 ft per level'],
+  ['Far Healer','None',0,'Healing Touch works on a visible target within 10 ft per level'],
   ['Final Repose','Day',1,'Target takes a Physical save penalty equal to Heal; dies at 0 HP'],
-  ['Healer\'s Eye','Indefinite',1,'Detect disease and poison, diagnose creatures, see living things in any light'],
-  ['Limb Restoration','Day',1,'Regrow a missing limb or organ; level 8+; target\'s strain maxed'],
+  ['Healer\'s Eye','Indefinite',1,'While committed: Main Action to detect disease and poison, diagnose, and read HP totals'],
+  ['Limb Restoration','Day',1,'Regrow a missing limb or organ; costs all remaining effort; level 8+; target\'s strain maxed'],
   ['Purge Ailment','Day',1,'Cure one poison or disease by touch; commit for the scene instead at level 7'],
   ['Refined Restoration','None',0,'Allies recover 2 strain per rest instead of 1'],
   ['Revive the Fallen','Day',1,'Revive a creature slain within 1 minute per level; level 8+; strain maxed'],
-  ['Swift Healer','Scene',1,'Healing Touch as an On Turn action, level times per day; once per round per target'],
-  ['The Healer\'s Knife','Scene',1,'Healing Touch deals damage instead; needs a touch or attack roll'],
+  ['Swift Healer','None',0,'Healing Touch as an On Turn action, level times per day; once per round per target'],
+  ['The Healer\'s Knife','None',0,'Healing Touch deals damage instead; you take the strain'],
   ['Tireless Vigor','Indefinite',1,'No fatigue; exert tirelessly; regain 1 HP per hour'],
   ['Vital Furnace','Day',1,'Negate a non-fatal injury; auto-stabilize at 0 HP and wake in 10 minutes']
  ],
@@ -885,7 +887,7 @@ function sampleCharacter(){
   return c;
 }
 /* Migrate any missing fields on characters saved by older versions */
-function normalize(c){const d=newCharacter();for(const k in d){if(c[k]==null)c[k]=d[k];}for(const k of ATTRS){if(c.attrs[k]==null)c.attrs[k]=10;if(c.attrAdj[k]==null)c.attrAdj[k]=0;}SKILLS.forEach(([n,a])=>{if(c.skills[n]==null)c.skills[n]=-1;if(!c.skillAttr[n])c.skillAttr[n]=a;});(c.arts||[]).forEach(a=>{if(a.uses==null)a.uses=a.active?1:0;delete a.active;if(a.commit==='Instant'||!COMMITS.includes(a.commit))a.commit='Scene';});(c.weapons||[]).forEach(w=>{if(!w.kind)w.kind='attack';if(w.kind==='action'){w.enc=0;w.readied=false;}if(w.kind==='check')w.kind='action';if(w.scale==null){w.scale=/^accursed/i.test(w.name||'')?'magic':/^vowed$/i.test((w.dmg||'').trim())?'vowed':'';}});return c;}
+function normalize(c){const d=newCharacter();for(const k in d){if(c[k]==null)c[k]=d[k];}for(const k of ATTRS){if(c.attrs[k]==null)c.attrs[k]=10;if(c.attrAdj[k]==null)c.attrAdj[k]=0;}SKILLS.forEach(([n,a])=>{if(c.skills[n]==null)c.skills[n]=-1;if(!c.skillAttr[n])c.skillAttr[n]=a;});(c.foci||[]).forEach(f=>{if(typeof f.notes==='string')f.notes=f.notes.replace(/^(Level 1: .*?) Level 2: /,'$1\nLevel 2: ');});(c.arts||[]).forEach(a=>{if(a.uses==null)a.uses=a.active?1:0;delete a.active;if(a.commit==='Instant'||!COMMITS.includes(a.commit))a.commit='Scene';});(c.weapons||[]).forEach(w=>{if(!w.kind)w.kind='attack';if(w.kind==='action'){w.enc=0;w.readied=false;}if(w.kind==='check')w.kind='action';if(w.scale==null){w.scale=/^accursed/i.test(w.name||'')?'magic':/^vowed$/i.test((w.dmg||'').trim())?'vowed':'';}});return c;}
 
 /* ======================= Storage ======================= */
 const KEY='wwn-ledger-v1';
@@ -933,7 +935,7 @@ function effortPools(){
     let max=cfg.base+sk+best;let f=(cfg.base?cfg.base+' + ':'')+skillName+' '+sk+(attrLabel?' + '+attrLabel+' '+sgn(best):'');
     if(partial&&cfg.partialMinus){max-=1;f+=' − 1 (partial)';}
     max=Math.max(1,max);
-    const committed=C.arts.filter(a=>a.pool===name).reduce((s,a)=>s+(+a.uses||0)*(+a.cost||0),0)+(+(C.effortAdj[name]||0));
+    const committed=C.arts.filter(a=>a.pool===name).reduce((s,a)=>s+(+a.uses||0)*(+a.cost||0),0);
     const defAttrLabel=cfg.attrs==='best'?'best attribute':cfg.attrs.length?'best of '+cfg.attrs.join('/'):'none';
     pools.push({key:name,label:name,max,committed,free:max-committed,formula:f+' (min 1)',defSkill,defAttrLabel,hasAttr:cfg.attrs==='best'||cfg.attrs.length>0});
   }
@@ -1044,7 +1046,7 @@ function renderWeapons(){
     <td><button class="rm" data-remove="weapons:${i}" title="Remove this row">Remove</button></td></tr>`).join('')||`<tr><td colspan="12" class="hint">Nothing here yet. Add a row, then pick a weapon or class action from the name box to fill in its numbers.</td></tr>`;
   bind($('#weapons'));
 }
-function focusText(name,level){const d=FOCI_DATA.find(f=>f[0].toLowerCase()===(name||'').trim().toLowerCase());if(!d)return null;return +level===2?`Level 1: ${d[1]} Level 2: ${d[2]}`:d[1];}
+function focusText(name,level){const d=FOCI_DATA.find(f=>f[0].toLowerCase()===(name||'').trim().toLowerCase());if(!d)return null;return +level===2?`Level 1: ${d[1]}\nLevel 2: ${d[2]}`:d[1];}
 function renderFoci(){
   $('#foci').innerHTML=C.foci.map((f,i)=>`<div class="fx"><input data-bind="foci.${i}.name" list="focusList" placeholder="Focus name" title="Type or pick a focus"><select data-bind="foci.${i}.level"><option value="1">Lvl 1</option><option value="2">Lvl 2</option></select><button class="rm" data-remove="foci:${i}">Remove</button><textarea data-bind="foci.${i}.notes" rows="1" placeholder="What it does for you"></textarea></div>`).join('')||`<div class="hint">No foci yet.</div>`;
   bind($('#foci'));
@@ -1132,10 +1134,10 @@ function recalc(){
   $('#effortPanel').style.display=pools.length?'':'none';
   const poolKey=JSON.stringify(pools.map(p=>p.key+'|'+p.defSkill));
   if(recalc._poolKey!==poolKey){recalc._poolKey=poolKey;
-    $('#pools').innerHTML=pools.map(p=>`<div class="pool"><div><span class="lbl">${esc(p.label)} effort</span><div class="big num"><span data-out="poolFree:${esc(p.key)}"></span> <span class="muted" style="font-size:1rem">free of <span data-out="poolMax:${esc(p.key)}"></span></span></div></div><div class="formula"><span data-out="poolFormula:${esc(p.key)}"></span><br>Committed: <span data-out="poolCommitted:${esc(p.key)}"></span></div><label class="adj edit-only"><span>Skill</span><select data-bind="effortSkill.${esc(p.key)}" style="width:110px"><option value="">${esc(p.defSkill)} (default)</option>${opts(ALL_SKILLS)}</select></label><label class="adj edit-only"><span>Attribute</span><select data-bind="effortAttr.${esc(p.key)}" style="width:120px"><option value="">${esc(p.defAttrLabel)} (default)</option>${opts(ATTRS)}</select></label><label class="adj"><span>Adjust</span><input type="number" class="play-edit" data-bind="effortAdj.${esc(p.key)}" title="Effort committed to things not listed as arts"></label></div>`).join('');
+    $('#pools').innerHTML=pools.map(p=>`<div class="pool"><div><span class="lbl">${esc(p.label)} effort</span><div class="big num"><span data-out="poolFree:${esc(p.key)}"></span><span class="muted" style="font-size:1rem">/<span data-out="poolMax:${esc(p.key)}"></span></span></div></div><div class="formula edit-only"><span data-out="poolFormula:${esc(p.key)}"></span></div><label class="adj edit-only"><span>Skill</span><select data-bind="effortSkill.${esc(p.key)}" style="width:110px"><option value="">${esc(p.defSkill)} (default)</option>${opts(ALL_SKILLS)}</select></label><label class="adj edit-only"><span>Attribute</span><select data-bind="effortAttr.${esc(p.key)}" style="width:120px"><option value="">${esc(p.defAttrLabel)} (default)</option>${opts(ATTRS)}</select></label></div>`).join('');
     bind($('#pools'));}
-  pools.forEach(p=>{out('poolFree:'+p.key,p.free);out('poolMax:'+p.key,p.max);out('poolFormula:'+p.key,esc(p.formula));out('poolCommitted:'+p.key,p.committed+(p.committed>p.max?' <span class="pill crit">over maximum</span>':''));});
-  $('#effortVitals').innerHTML=pools.map(p=>`<div class="vital"><span class="lbl">${esc(p.label)} effort</span><span class="big magic">${p.free}<span class="sub" style="font-size:.9rem;font-weight:600">/${p.max}</span></span></div>`).join('');
+  pools.forEach(p=>{out('poolFree:'+p.key,p.free);out('poolMax:'+p.key,p.max);out('poolFormula:'+p.key,esc(p.formula)+(p.committed>p.max?' <span class="pill crit">over maximum</span>':''));});
+  $('#effortVitals').innerHTML=pools.map(p=>`<div class="vital"><span class="lbl">${esc(p.label)} effort</span><span class="big magic">${p.free}<span class="sub" style="font-size:.95rem;font-weight:600">/${p.max}</span></span></div>`).join('');
   // spells
   const sm2=spellMode();$('#spellPanel').style.display=sm2?'':'none';
   if(sm2){const prepared=C.spells.filter(s=>s.prepared).length;
