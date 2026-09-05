@@ -59,10 +59,11 @@ button.step{width:32px;height:32px;padding:0;font-size:1.1rem;line-height:1;bord
 
 /* ---------- vitals strip ---------- */
 .vitals{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
-.vitals-inner{max-width:1240px;margin:0 auto;padding:10px 16px 8px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:stretch}
-.who{display:flex;flex-direction:column;justify-content:center;min-width:180px;flex:1 1 200px}
+.vitals-inner{max-width:1240px;margin:0 auto;padding:8px 16px 6px;display:flex;flex-direction:column;gap:4px}
+.vitals-row{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:stretch}
+.who{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .who h1{font-size:1.55rem;line-height:1.1;font-weight:700}
-.who .sub{color:var(--muted);font-size:.9rem;margin-top:2px}
+.who .sub{color:var(--muted);font-size:.9rem}
 .vital{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;padding:0 4px;min-width:56px}
 .vital .big{font-size:1.7rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
 .vital .big.magic{color:var(--magic)}
@@ -74,14 +75,15 @@ button.step{width:32px;height:32px;padding:0;font-size:1.1rem;line-height:1;bord
 .saves .sv{display:flex;flex-direction:column;align-items:center;min-width:40px}
 .saves .sv b{font-size:1.25rem;line-height:1.1;font-variant-numeric:tabular-nums}
 .saves .sv span{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.vitals .actions{display:flex;gap:6px;align-items:center;margin-left:auto}
 .vital-sep{width:1px;background:var(--line);margin:4px 0}
 .hp-warn .tracker input{border-color:var(--crit);color:var(--crit)}
 .strain-warn .tracker input{border-color:var(--warn);color:var(--warn)}
 
 /* ---------- tabs ---------- */
 .tabs{max-width:1240px;margin:0 auto;padding:0 16px;display:flex;gap:4px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--line)}
-.tabs .mode{margin-left:auto;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:999px;padding:4px 14px;margin-top:4px;margin-bottom:4px}
+.tab-actions{margin-left:auto;display:flex;gap:6px;align-items:center;padding:4px 0}
+.tab-actions button{padding:4px 12px}
+.tabs .mode{border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:999px;padding:4px 14px}
 .tabs .mode:hover{background:var(--accent-soft)}
 body[data-mode="edit"] .tabs .mode{background:var(--accent);color:var(--accent-ink)}
 .tabs button[role=tab]{background:transparent;border:1px solid transparent;border-bottom:2px solid transparent;border-radius:0;color:var(--muted);padding:8px 14px}
@@ -100,7 +102,7 @@ main{max-width:1240px;margin:0 auto;padding:14px 16px 64px}
 /* ---------- attributes ---------- */
 .attrs{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
 @media (max-width:700px){.attrs{grid-template-columns:repeat(3,1fr)}}
-.attr{background:var(--surface2);border-radius:8px;padding:8px 6px 6px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.attr{background:var(--surface2);border-radius:8px;padding:8px 6px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:118px}
 .attr .lbl{font-size:.8rem}
 .attr input.score{width:64px;font-size:1.6rem;font-weight:700;padding:2px;background:var(--surface);border:1px solid var(--line)}
 .attr .mod{font-size:1.1rem;font-weight:700;font-variant-numeric:tabular-nums}
@@ -108,7 +110,7 @@ main{max-width:1240px;margin:0 auto;padding:14px 16px 64px}
 .attr .adj input{width:36px;font-size:.8rem;padding:1px}
 
 .save-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.save-tile{background:var(--surface2);border-radius:8px;padding:10px 8px;text-align:center}
+.save-tile{background:var(--surface2);border-radius:8px;padding:10px 8px;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:118px}
 .save-tile b{display:block;font-size:1.7rem;line-height:1.05;font-variant-numeric:tabular-nums}
 .save-tile .lbl{display:block;margin-bottom:2px}
 .save-tile .hint{margin-top:3px}
@@ -135,6 +137,9 @@ tr.untrained td.calc{color:var(--muted)}
 .pool .adj{display:flex;align-items:center;gap:6px;font-size:.8rem}
 .pool .adj input{width:52px}
 .art-group h3{color:var(--magic);margin-bottom:6px}
+.desc-cell{width:42%;max-width:0}
+.art-desc{width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-mode="play"] .pv td input.art-desc{width:100%;field-sizing:fixed;max-width:100%}
 .setting{display:flex;align-items:flex-start;gap:10px;margin-top:16px;cursor:pointer}
 .setting input{flex:none;margin-top:3px}
 .setting>span{flex:1;min-width:0}
@@ -150,6 +155,17 @@ tr.untrained td.calc{color:var(--muted)}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center;font-size:.92rem}
 .kv .lbl{font-size:.7rem}
 .enc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.armor-tbl td.lbl{white-space:nowrap;padding-right:8px}
+#skills td{padding:2px 4px}
+#skills td:first-child{width:1%;white-space:nowrap;padding-right:14px}
+#skills td.calc{width:64px}
+#skills th:nth-child(2),#skills td:nth-child(2){width:72px}
+#skills th:nth-child(3),#skills td:nth-child(3){width:96px}
+#skills th:nth-child(4),#skills td:nth-child(4){width:72px}
+.sk-sel{text-align:center;text-align-last:center;margin:0 auto;display:block}
+body[data-mode="play"] .pv #skills .sk-sel{width:auto}
+.armor-tbl td{padding:3px 4px}
+.ac-line{display:flex;align-items:flex-end;gap:12px;margin-top:10px;flex-wrap:wrap}
 .enc-box{background:var(--surface2);border-radius:8px;padding:10px 12px}
 .enc-box .big{font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums}
 .enc-box .big span{font-size:1rem;color:var(--muted);font-weight:600}
@@ -167,7 +183,7 @@ tr.untrained td.calc{color:var(--muted)}
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50}
 .toast.show{opacity:1}
 .fx-list{display:flex;flex-direction:column;gap:6px}
-.fx{display:grid;grid-template-columns:1fr 70px auto;gap:8px;align-items:start}
+.fx{display:grid;grid-template-columns:1fr 76px auto;gap:6px 8px;align-items:center}
 .fx textarea{min-height:36px;grid-column:1/-1}
 .sr{position:absolute;left:-9999px}
 .untr{font-size:.5rem;color:var(--muted);opacity:.7;vertical-align:super;margin-left:1px}
@@ -184,7 +200,8 @@ body[data-mode="play"] .pv .attr input.score{background:transparent;border-color
 body[data-mode="play"] .pv td input:not(.play-edit),body[data-mode="play"] .pv td select:not(.play-edit){padding-left:2px;padding-right:2px;width:auto;min-width:2ch;max-width:100%;field-sizing:content}
 body[data-mode="play"] .pv td .w-name input{min-width:8ch}
 body[data-mode="play"] .pv .field .lbl{opacity:.85}
-body[data-mode="play"] .pv .fx{grid-template-columns:1fr 70px}
+body[data-mode="play"] .pv .fx{grid-template-columns:1fr 76px}
+body[data-mode="play"] .pv .fx textarea{padding-top:0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media print{
   .vitals{position:static;box-shadow:none}.tabs,.actions,.list-actions,button{display:none!important}
@@ -199,32 +216,30 @@ body[data-mode="play"] .pv .fx{grid-template-columns:1fr 70px}
       <h1 data-out="name">—</h1>
       <div class="sub"><span data-out="classLine"></span> · Level <span data-out="level"></span><span class="xp-only"> · <span data-out="xpLine"></span></span></div>
     </div>
-    <div class="vital" id="hpVital">
-      <span class="lbl">Hit points</span>
-      <div class="tracker"><button class="step" data-step="hp.cur:-1" aria-label="Lose 1 HP">−</button><input type="number" class="play-edit" data-bind="hp.cur" aria-label="Current HP"><span class="max">/ <span data-out="hpMax">0</span></span><button class="step" data-step="hp.cur:1" aria-label="Gain 1 HP">+</button></div>
-    </div>
-    <div class="vital" id="strainVital">
-      <span class="lbl">System strain</span>
-      <div class="tracker"><button class="step" data-step="strain.cur:-1" aria-label="Reduce strain">−</button><input type="number" class="play-edit" data-bind="strain.cur" aria-label="Current system strain"><span class="max">/ <span data-out="strainMax">0</span></span><button class="step" data-step="strain.cur:1" aria-label="Add strain">+</button></div>
-    </div>
-    <div class="vital-sep"></div>
-    <div class="vital"><span class="lbl">AC</span><span class="big" data-out="ac">10</span></div>
-    <div class="vital"><span class="lbl">Attack</span><span class="big" data-out="atk">+0</span></div>
-    <div class="vital"><span class="lbl">Init</span><span class="big" data-out="init">+0</span></div>
-    <div class="vital" id="moveVital"><span class="lbl">Move</span><span class="big"><span data-out="move">30</span> <span class="sub" style="font-size:.9rem;font-weight:600">ft</span></span></div>
-    <div class="vital-sep"></div>
-    <div class="vital"><span class="lbl">Saves (d20 ≥)</span>
-      <div class="saves">
-        <div class="sv"><b data-out="savePhys">15</b><span>Phys</span></div>
-        <div class="sv"><b data-out="saveEvade">15</b><span>Evade</span></div>
-        <div class="sv"><b data-out="saveMental">15</b><span>Mental</span></div>
-        <div class="sv"><b data-out="saveLuck">15</b><span>Luck</span></div>
+    <div class="vitals-row">
+      <div class="vital" id="hpVital">
+        <span class="lbl">Hit points</span>
+        <div class="tracker"><button class="step" data-step="hp.cur:-1" aria-label="Lose 1 HP">−</button><input type="number" class="play-edit" data-bind="hp.cur" aria-label="Current HP"><span class="max">/ <span data-out="hpMax">0</span></span><button class="step" data-step="hp.cur:1" aria-label="Gain 1 HP">+</button></div>
       </div>
-    </div>
-    <div id="effortVitals" style="display:contents"></div>
-    <div class="actions">
-      <button data-action="endScene" title="Release effort committed for the scene">End scene</button>
-      <button data-action="rest" title="New day: recover HP equal to level, −1 system strain, reset daily casts and effort">Rest</button>
+      <div class="vital" id="strainVital">
+        <span class="lbl">System strain</span>
+        <div class="tracker"><button class="step" data-step="strain.cur:-1" aria-label="Reduce strain">−</button><input type="number" class="play-edit" data-bind="strain.cur" aria-label="Current system strain"><span class="max">/ <span data-out="strainMax">0</span></span><button class="step" data-step="strain.cur:1" aria-label="Add strain">+</button></div>
+      </div>
+      <div id="effortVitals" style="display:contents"></div>
+      <div class="vital-sep"></div>
+      <div class="vital"><span class="lbl">AC</span><span class="big" data-out="ac">10</span></div>
+      <div class="vital"><span class="lbl">Attack</span><span class="big" data-out="atk">+0</span></div>
+      <div class="vital"><span class="lbl">Init</span><span class="big" data-out="init">+0</span></div>
+      <div class="vital" id="moveVital"><span class="lbl">Move</span><span class="big"><span data-out="move">30</span> <span class="sub" style="font-size:.9rem;font-weight:600">ft</span></span></div>
+      <div class="vital-sep"></div>
+      <div class="vital"><span class="lbl">Saves (d20 ≥)</span>
+        <div class="saves">
+          <div class="sv"><b data-out="savePhys">15</b><span>Phys</span></div>
+          <div class="sv"><b data-out="saveEvade">15</b><span>Evade</span></div>
+          <div class="sv"><b data-out="saveMental">15</b><span>Mental</span></div>
+          <div class="sv"><b data-out="saveLuck">15</b><span>Luck</span></div>
+        </div>
+      </div>
     </div>
   </div>
 <nav class="tabs" role="tablist">
@@ -235,7 +250,11 @@ body[data-mode="play"] .pv .fx{grid-template-columns:1fr 70px}
   <button role="tab" data-tab="character">Character</button>
   <button role="tab" data-tab="data">Save / Load</button>
   <button role="tab" data-tab="settings">Settings</button>
-  <button id="modeBtn" class="mode" title="Switch between play mode and edit mode">Edit</button>
+  <span class="tab-actions">
+    <button data-action="endScene" title="Return effort committed for the scene">End scene</button>
+    <button data-action="rest" title="New day: recover HP equal to level, −1 system strain, reset daily casts and effort">Rest</button>
+    <button id="modeBtn" class="mode" title="Switch between play mode and edit mode">Edit</button>
+  </span>
 </nav>
 </header>
 
@@ -254,43 +273,38 @@ body[data-mode="play"] .pv .fx{grid-template-columns:1fr 70px}
     <div class="attrs" id="attrs"></div>
   </div>
   <div class="panel span5">
-    <div class="panel-head"><h2>Saving throws</h2><span class="hint">16 − level − best modifier. Luck has no modifier.</span></div>
+    <div class="panel-head"><h2>Saving throws</h2><span class="hint edit-only">16 − level − best modifier. Luck has no modifier.</span></div>
     <div class="save-tiles">
       <div class="save-tile"><span class="lbl">Physical</span><b data-out="savePhys">15</b><div class="hint">Str / Con</div></div>
       <div class="save-tile"><span class="lbl">Evasion</span><b data-out="saveEvade">15</b><div class="hint">Dex / Int</div></div>
       <div class="save-tile"><span class="lbl">Mental</span><b data-out="saveMental">15</b><div class="hint">Wis / Cha</div></div>
       <div class="save-tile"><span class="lbl">Luck</span><b data-out="saveLuck">15</b><div class="hint">none</div></div>
     </div>
-    <div class="hint" style="margin-top:10px">Roll 1d20 and meet or beat the number. Natural 1 always fails, natural 20 always succeeds.</div>
+    <div class="hint edit-only" style="margin-top:10px">Roll 1d20 and meet or beat the number. Natural 1 fails, natural 20 succeeds.</div>
   </div>
 
   <div class="panel span12">
-    <div class="panel-head"><h2>Attacks &amp; actions</h2><span class="hint">Roll = d20 + attack bonus + skill + attribute (−2 untrained)</span></div>
+    <div class="panel-head"><h2>Attacks &amp; actions</h2><span class="hint edit-only">Roll = d20 + attack bonus + skill + attribute (−2 untrained)</span></div>
     <div class="tbl-wrap"><table>
       <thead><tr><th>Attack / action</th><th>Skill</th><th>Attr</th><th class="c">Roll</th><th>Damage / effect</th><th>Shock</th><th>Range</th><th>Traits</th><th class="c enc-only">Enc</th><th class="c enc-only" title="Counts toward readied encumbrance">Rdy</th><th class="c" title="Bonus: added to the roll for attacks, to the damage or effect for actions">+</th><th></th></tr></thead>
       <tbody id="weapons"></tbody>
     </table></div>
     <div class="list-actions"><button data-action="addWeapon">+ Add row</button></div>
-    <div class="hint" style="margin-top:8px" data-out="dmgNote"></div>
+    <div class="hint edit-only" style="margin-top:8px" data-out="dmgNote"></div>
   </div>
 
   <div class="panel span4">
-    <div class="panel-head"><h2>Armor</h2><span class="hint">AC = armor + Dex</span></div>
-    <div class="field"><span class="lbl">Armor</span><select data-bind="armor.name" id="armorSel"></select></div>
-    <div class="row" style="margin-top:6px">
-      <div class="field" style="flex:1"><span class="lbl">Base AC</span><input type="number" data-bind="armor.ac"></div>
-      <div class="field enc-only" style="flex:1"><span class="lbl">Enc</span><input type="number" data-bind="armor.enc" step="0.5"></div>
-      <label class="field" style="align-items:center"><span class="lbl">Worn</span><input type="checkbox" data-bind="armor.worn" style="margin-top:6px"></label>
-    </div>
-    <div class="field" style="margin-top:10px"><span class="lbl">Shield</span><select data-bind="shield.name" id="shieldSel"></select></div>
-    <div class="row" style="margin-top:6px">
-      <div class="field" style="flex:1"><span class="lbl">Shield AC</span><input type="number" data-bind="shield.ac"></div>
-      <div class="field enc-only" style="flex:1"><span class="lbl">Enc</span><input type="number" data-bind="shield.enc" step="0.5"></div>
-      <label class="field" style="align-items:center"><span class="lbl">Carried</span><input type="checkbox" data-bind="shield.worn" style="margin-top:6px"></label>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <div class="field" style="flex:1"><span class="lbl">Other AC bonus</span><input type="number" data-bind="acMisc"></div>
-      <div class="field" style="flex:2"><span class="lbl">Armor class</span><div><span class="big num" style="font-size:1.6rem;font-weight:700" data-out="ac"></span> <span class="hint" data-out="acNote"></span></div></div>
+    <div class="panel-head"><h2>Armor</h2><span class="hint edit-only">AC = armor + Dex; a shield adds +1 or its own AC</span></div>
+    <div class="tbl-wrap"><table class="armor-tbl">
+      <thead><tr><th></th><th>Type</th><th class="c">AC</th><th class="c enc-only">Enc</th><th class="c">On</th></tr></thead>
+      <tbody>
+        <tr><td class="lbl">Armor</td><td><select data-bind="armor.name" id="armorSel"></select></td><td class="c"><input type="number" data-bind="armor.ac" style="width:56px"></td><td class="c enc-only"><input type="number" data-bind="armor.enc" step="0.5" style="width:52px"></td><td class="c"><input type="checkbox" data-bind="armor.worn" title="Worn"></td></tr>
+        <tr><td class="lbl">Shield</td><td><select data-bind="shield.name" id="shieldSel"></select></td><td class="c"><input type="number" data-bind="shield.ac" style="width:56px"></td><td class="c enc-only"><input type="number" data-bind="shield.enc" step="0.5" style="width:52px"></td><td class="c"><input type="checkbox" data-bind="shield.worn" title="Carried"></td></tr>
+      </tbody>
+    </table></div>
+    <div class="ac-line">
+      <div><span class="lbl">Armor class</span><div><span class="big num" style="font-size:1.6rem;font-weight:700" data-out="ac"></span> <span class="hint" data-out="acNote"></span></div></div>
+      <label class="field edit-only" style="margin-left:auto"><span class="lbl">Other bonus</span><input type="number" data-bind="acMisc" style="width:64px"></label>
     </div>
   </div>
 
@@ -309,9 +323,9 @@ body[data-mode="play"] .pv .fx{grid-template-columns:1fr 70px}
 <section data-panel="skills" class="pv">
 <div class="grid">
   <div class="panel span7">
-    <div class="panel-head"><h2>Skills</h2><span class="hint">Check = 2d6 + skill + attribute</span></div>
+    <div class="panel-head"><h2>Skills</h2><span class="hint edit-only">Check = 2d6 + skill + attribute</span></div>
     <div class="tbl-wrap"><table>
-      <thead><tr><th>Skill</th><th class="c">Level</th><th>Attribute</th><th class="c">Check</th><th>Notes</th></tr></thead>
+      <thead><tr><th>Skill</th><th class="c">Level</th><th class="c">Attribute</th><th class="c">Check</th><th>Notes</th></tr></thead>
       <tbody id="skills"></tbody>
     </table></div>
     <div class="row edit-only" style="margin-top:12px">
@@ -320,7 +334,7 @@ body[data-mode="play"] .pv .fx{grid-template-columns:1fr 70px}
     </div>
   </div>
   <div class="panel span5">
-    <div class="panel-head"><h2>Foci</h2><span class="hint" data-out="fociNote"></span></div>
+    <div class="panel-head"><h2>Foci</h2><span class="hint edit-only" data-out="fociNote"></span></div>
     <div class="fx-list" id="foci"></div>
     <div class="list-actions"><button data-action="addFocus">+ Add focus</button></div>
   </div>
@@ -331,7 +345,7 @@ body[data-mode="play"] .pv .fx{grid-template-columns:1fr 70px}
 <section data-panel="gear" class="pv">
 <div class="grid">
   <div class="panel span8">
-    <div class="panel-head"><h2>Equipment</h2><span class="hint"><span class="enc-only">Readied gear is in hand or on your belt. Stowed gear takes a Main Action to retrieve. Three small items bundle into 1 Enc.</span><span class="enc-off-only">Encumbrance tracking is off (Settings).</span></span></div>
+    <div class="panel-head"><h2>Equipment</h2><span class="hint edit-only"><span class="enc-only">Readied gear is in hand or on your belt. Stowed gear takes a Main Action to retrieve. Three small items bundle into 1 Enc.</span><span class="enc-off-only">Encumbrance tracking is off (Settings).</span></span></div>
     <div class="tbl-wrap"><table>
       <thead><tr><th>Item</th><th class="c">Qty</th><th class="c enc-only">Enc each</th><th class="enc-only">Where</th><th>Notes</th><th></th></tr></thead>
       <tbody id="items"></tbody>
@@ -363,7 +377,7 @@ body[data-mode="play"] .pv .fx{grid-template-columns:1fr 70px}
 <section data-panel="magic" class="pv">
 <div class="grid">
   <div class="panel span12" id="effortPanel">
-    <div class="panel-head"><h2>Effort</h2><span class="hint">Committed effort is the sum of the arts in use below. Use the adjust box for anything tracked by hand.</span></div>
+    <div class="panel-head"><h2>Effort</h2><span class="hint edit-only">Committed effort is the sum of the arts in use below. Use the adjust box for anything tracked by hand.</span></div>
     <div id="pools" class="fx-list"></div>
   </div>
   <div class="panel span12" id="spellPanel">
@@ -376,7 +390,7 @@ body[data-mode="play"] .pv .fx{grid-template-columns:1fr 70px}
     <div class="list-actions"><button data-action="addSpell">+ Add spell</button></div>
   </div>
   <div class="panel span12" id="artsPanel">
-    <div class="panel-head"><h2>Arts</h2><span class="hint">Press + each time you use an art; its cost stays committed until the scene or day ends, or until you release it with −. "End scene" and "Rest" in the header return the effort.</span></div>
+    <div class="panel-head"><h2>Arts</h2><span class="hint edit-only">Press + each time you use an art; its cost stays committed until the scene or day ends, or until you release it with −. "End scene" and "Rest" in the header return the effort.</span></div>
     <div id="artsGroups" class="fx-list" style="gap:18px"></div>
   </div>
 </div>
@@ -466,6 +480,7 @@ body[data-mode="play"] .pv .fx{grid-template-columns:1fr 70px}
 <datalist id="bgList"></datalist>
 <datalist id="weaponList"></datalist>
 <datalist id="focusList"></datalist>
+<div id="artLists"></div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -477,7 +492,44 @@ const ATTR_NAMES={STR:'Strength',DEX:'Dexterity',CON:'Constitution',INT:'Intelli
 const SKILLS=[['Administer','INT'],['Connect','CHA'],['Convince','CHA'],['Craft','INT'],['Exert','STR'],['Heal','INT'],['Know','INT'],['Lead','CHA'],['Magic','INT'],['Notice','WIS'],['Perform','CHA'],['Pray','WIS'],['Punch','STR'],['Ride','DEX'],['Sail','DEX'],['Shoot','DEX'],['Sneak','DEX'],['Stab','STR'],['Survive','WIS'],['Trade','CHA'],['Work','CON']];
 const COMBAT_SKILLS=['Stab','Shoot','Punch','Magic'];
 const BACKGROUNDS=['Artisan','Barbarian','Carter','Courtesan','Criminal','Hunter','Laborer','Merchant','Noble','Nomad','Peasant','Performer','Physician','Priest','Sailor','Scholar','Slave','Soldier','Thug','Wanderer'];
-const FOCI=['Alert','Armored Magic','Armsmaster','Artisan','Assassin','Authority','Close Combatant','Connected','Cultured Through','Deadeye','Dealmaker','Developed Attribute','Die Hard','Diplomatic Grace','Gifted Chirurgeon','Henchkeeper','Impervious Defense','Impostor','Lucky','Nullifier','Poisoner','Polymath','Rider','Shocking Assault','Sniper\'s Eye','Special Origin','Specialist','Spirit Familiar','Trapmaster','Unarmed Combatant','Unique Gift','Valiant Defender','Well Met','Whirlwind Assault','Xenoblooded'];
+const FOCI_DATA=[
+['Alert','Gain Notice. Cannot be surprised; +1 initiative or roll twice.','Always act first in a round unless another Alert combatant is present.'],
+['Armored Magic','Cast in armor of Enc 2 or less, or with a shield.','Cast in any armor, and with hands full.'],
+['Armsmaster','Gain Stab. Ready melee weapons as an Instant; add Stab to melee damage and Shock.','Shock treats target AC as 10; +1 to hit with melee weapons.'],
+['Artisan','Gain Craft; count as one level higher for crafting; salvage 1 point cheaper.','First mod on an item is free; masterwork attempts always succeed.'],
+['Assassin','Gain Sneak. Conceal a knife; point-blank attacks on the unaware cannot miss.','Move before and after an execution attack; cannot alert the victim.'],
+['Authority','Gain Lead. Once a day, convince an NPC with a Cha/Lead check.','Followers add your Lead to Morale and hit rolls.'],
+['Close Combatant','Gain a combat skill. Ignore Shock from melee; use knives in melee freely.','Shock treats target AC as 10; Fighting Withdrawal is an On Turn action.'],
+['Connected','Gain Connect. After a week in a place, call one modest favor per day.','Once per session, meet someone you know who will help.'],
+['Cultured Through','Gain Connect. Speak every regional language; learn a new one in a week.','Once per session, reroll a failed social skill check.'],
+['Deadeye','Gain Shoot. Ready ranged weapons as an Instant; add Shoot to ranged damage.','Reload as an On Turn; shoot in melee without penalty; never miss a target shot.'],
+['Dealmaker','Gain Trade. Find a buyer or seller within half an hour.','Once per session, persuade someone to make terms with you.'],
+['Developed Attribute','+1 to one attribute modifier (max +3). Not for Mages or partial Mages.','Take again for a different attribute.'],
+['Die Hard','+2 max HP per level; stabilize automatically when mortally wounded.','Once a day, the first drop to 0 HP leaves you at 1 HP instead.'],
+['Diplomatic Grace','Gain Convince. Speak regional languages; reroll 1s when negotiating.','Once a day, seal a bargain; breaking it requires a save.'],
+['Gifted Chirurgeon','Gain Heal. Stabilize as an On Turn; 3d6 drop lowest on Heal checks; double first aid.','Healing counts as magical; heal 1d6 + Heal as a Main Action (+1 strain).'],
+['Henchkeeper','Gain Lead. Recruit a henchman within a day; one per three levels.','Henchmen are 2 HD; recruit skilled NPCs through favors.'],
+['Impervious Defense','Innate AC 15 + half level (rounded up).','Once a day, negate a single weapon attack or physical trauma as an Instant.'],
+['Impostor','Gain Perform or Sneak. Reroll failed disguise checks once per scene; one maintained false identity.','Switch among three appearances as a Main Action; a new identity per community.'],
+['Lucky','Once a week, avoid death or a mortal wound; roll twice on games of chance.','Once per session, roll 1d6: on 2+ something fortunate happens.'],
+['Nullifier','Allies within 20 ft get +2 on saves vs magic; sense magic; first failed magic save each day succeeds.','Once a day, ignore an unwanted magical effect as an Instant.'],
+['Poisoner','Gain Heal. Reroll poison saves; your toxins deal 2d6 + level, Physical save for half.','Immune to poison; universal antidote as a Main Action; ingested poisons are execution attacks.'],
+['Polymath','Gain one bonus skill. All non-combat skills count as at least level 0.','All non-combat skills count as at least level 1.'],
+['Rider','Gain Ride. Steeds have Morale 12 and use your AC; travel 50% farther.','Once per scene negate an attack on your steed; reroll Ride; telepathic bond.'],
+['Shocking Assault','Gain Punch or Stab. Shock treats target AC as 10.','+2 Shock damage with melee weapons.'],
+['Sniper\'s Eye','Gain Shoot. 3d6 drop lowest on execution and target-shot checks.','Ranged execution attacks never miss; target gets −4 on the Physical save.'],
+['Special Origin','Benefits of your species or origin, per the campaign setting.','Further species benefits, per the setting.'],
+['Specialist','Gain any skill except Magic, Stab, Shoot or Punch. Roll 3d6 drop lowest for that skill.','Roll 4d6 drop the two lowest for that skill.'],
+['Spirit Familiar','A devoted companion; summon or dismiss as a Main Action. Refreshes one committed Effort per day.','Pick two familiar benefits (HP, attack, skill, second shape, flight, speech).'],
+['Trapmaster','Gain Notice. Reroll failed trap checks once per scene; improvise traps in 5 minutes.','Dispel magical traps once per scene as Extirpate Arcana.'],
+['Unarmed Combatant','Gain Punch. Unarmed damage scales from 1d6 to 1d12+1 with Punch; Shock at Punch-1+.','Even a missed Punch attack deals an unmodified 1d6.'],
+['Unique Gift','A player-defined ability agreed with the GM.','Per the GM.'],
+['Valiant Defender','Gain Stab or Punch. +2 on Screen Ally checks; screen one extra attacker.','First Screen Ally each round succeeds automatically; +2 AC while screening.'],
+['Well Met','+1 on reaction rolls when present; hostile creatures parley for a round first.','Once per session, make a subject as friendly as plausibly possible.'],
+['Whirlwind Assault','Gain Stab. Once per scene, apply Shock to every foe in melee range.','When you kill a target, immediately attack another in reach.'],
+['Xenoblooded','One exotic heritage benefit (heat, water, gravity, radiation).','Further heritage benefits.']
+];
+const FOCI=FOCI_DATA.map(f=>f[0]);
 const ARMORS=[{n:'None',ac:10,enc:0},{n:'War Shirt',ac:11,enc:0},{n:'Buff Coat',ac:12,enc:0},{n:'Linothorax',ac:13,enc:1},{n:'War Robe',ac:14,enc:3},{n:'Pieced Armor',ac:14,enc:2},{n:'Mail Shirt',ac:14,enc:1},{n:'Cuirass and Greaves',ac:15,enc:2},{n:'Scaled Armor',ac:16,enc:3},{n:'Mail Hauberk',ac:16,enc:2},{n:'Plate Armor',ac:17,enc:2},{n:'Great Armor',ac:19,enc:3},{n:'Grand Plate',ac:16,enc:3},{n:'Custom',ac:10,enc:0}];
 const SHIELDS=[{n:'None',ac:0,enc:0},{n:'Small Shield',ac:13,enc:1},{n:'Large Shield',ac:14,enc:1},{n:'Custom',ac:13,enc:1}];
 const WEAPONS=[
@@ -527,7 +579,238 @@ const PARTIALS={
  'Wise':{}
 };
 const PARTIAL_NAMES=Object.keys(PARTIALS);
-const COMMITS=['Scene','Day','Indefinite'];
+const COMMITS=['Scene','Day','Indefinite','None'];
+/* Arts by class: [name, commit, effort cost, one-line effect]. Summarized from the WWN SRD. */
+const ARTS_DATA={
+ 'High Mage':[
+  ['Arcane Lexicon','Scene',1,'Read any non-obfuscated script for the scene'],
+  ['Counter Magic','Day',1,'Fizzle an enemy spell with an opposed Int/Magic or Cha/Magic check, once per round'],
+  ['Empowered Sorcery','Day',1,'Reroll any variable die from a spell effect, take the preferred result'],
+  ['Hang Sorcery','Scene',1,'Suspend a cast spell to trigger later as an On Turn action; no other spells until released'],
+  ['Inexorable Effect','Day',1,'Force an enemy to reroll a successful save and take the worse result, once per scene'],
+  ['Iron Resolution','Day',1,'Physical save to keep casting despite disruption; ignore damage for casting purposes'],
+  ['Preparatory Countermagic','Scene',1,'Unaffected by your own prepared spells, including area effects'],
+  ['Psychic Conversion','None',0,'Spend a casting slot to remove 1 strain and heal 2 HP per level, once per day'],
+  ['Restrained Casting','Day',1,'Cast silently without gestures; damage still disrupts'],
+  ['Retain Sorcery','Day',1,'Cast without using a daily slot, once per day; cannot cast next turn'],
+  ['Sense Magic','Indefinite',1,'Perceive magical energy; one-sentence descriptions of standing magic and items'],
+  ['Suppress Magic','Day',1,'Suppress a visible magical effect within 100 ft for 1d6 + level rounds'],
+  ['Swift Casting','Day',1,'Cast a spell as an On Turn action once per scene; cannot cast again or be injured that round'],
+  ['Ward Allies','Day',1,'Omit up to six allies from an area spell\'s damage or ill effects'],
+  ['Wizard\'s Grandeur','Indefinite',1,'Always clean, comfortable, and rested regardless of conditions']
+ ],
+ 'Elementalist':[
+  ['Elemental Resilience','None',0,'Unharmed by mundane cold or heat; half damage from magical flame or frost'],
+  ['Elemental Sparks','Scene',0,'Conjure petty flame, water, ice, stone or wind for minor tricks'],
+  ['Beckoned Deluge','Scene',1,'Conjure water in 10 ft cubes per level within 50 ft per level'],
+  ['Earthsight','Scene',1,'See through earth or stone up to level feet; see in darkness'],
+  ['Elemental Blast','Scene',1,'Elemental attack at 50 ft per level; 1d6 + level + attribute damage'],
+  ['Flamesight','Indefinite',1,'See thermal gradients in darkness; optional 30 ft light'],
+  ['Pavis of Elements','Indefinite',1,'+4 AC (max 18) while committed'],
+  ['Petrifying Stare','Day',1,'Target loses its Move action for half level rounds; Physical save resists'],
+  ['Rune of Destruction','Day',1,'Triggered rune deals 2d6 + level in a 5 ft radius; lasts 1 hour per level'],
+  ['Steps of Air','Scene',1,'Target flies one round per level; negates falling damage if used instantly'],
+  ['Stunning Shock','Day',1,'Conductive target loses next Main Action; Physical save: loses Move instead'],
+  ['Thermal Shield','Scene',1,'Negate one instance of fire or frost damage to a visible ally or object']
+ ],
+ 'Necromancer':[
+  ['Bonetalker','Scene',1,'See and speak with undead; sense surface thoughts of visible undead'],
+  ['Cold Flesh','Indefinite',1,'No sleep, reduced Shock, natural AC 12 + half level, drain life on melee hits'],
+  ['False Death','Indefinite',1,'Appear dead; lose Main Actions; survive up to one day per level'],
+  ['Gravesight','Indefinite',1,'See life energies, sicknesses and poisons; see in perfect darkness'],
+  ['Keeper of the Gate','Day',1,'Kill or stabilize a mortally wounded creature within 20 ft per level'],
+  ['Life Bridge','Day',1,'Transfer hit points between willing or helpless targets you touch'],
+  ['Master of Bones','Scene',1,'Undead roll twice against your abilities; negate one undead attack per commitment'],
+  ['Red Harvest','Day',1,'When an intelligent creature dies within 50 ft, heal 1d6 + level or gain +4 to hit'],
+  ['Unaging','None',0,'Stop aging; immune to poison and disease'],
+  ['Uncanny Ichor','None',0,'Predators will not eat you; puncture wounds cannot kill you outright'],
+  ['Unliving Persistence','Day',1,'Auto-stabilize when mortally wounded; can grant to others by touch']
+ ],
+ 'Healer':[
+  ['Healing Touch','Scene',1,'Heal 2d6 + Heal to a touched ally as a Main Action; +1 strain to target'],
+  ['Empowered Healer','None',0,'Healing Touch adds your level to the healing'],
+  ['Facile Healer','None',0,'Healing Touch needs no Effort commitment'],
+  ['Far Healer','Scene',1,'Healing Touch works on a visible target within 10 ft per level'],
+  ['Final Repose','Day',1,'Target takes a Physical save penalty equal to Heal; dies at 0 HP'],
+  ['Healer\'s Eye','Indefinite',1,'Detect disease and poison, diagnose creatures, see living things in any light'],
+  ['Limb Restoration','Day',1,'Regrow a missing limb or organ; level 8+; target\'s strain maxed'],
+  ['Purge Ailment','Day',1,'Cure one poison or disease by touch; commit for the scene instead at level 7'],
+  ['Refined Restoration','None',0,'Allies recover 2 strain per rest instead of 1'],
+  ['Revive the Fallen','Day',1,'Revive a creature slain within 1 minute per level; level 8+; strain maxed'],
+  ['Swift Healer','Scene',1,'Healing Touch as an On Turn action, level times per day; once per round per target'],
+  ['The Healer\'s Knife','Scene',1,'Healing Touch deals damage instead; needs a touch or attack roll'],
+  ['Tireless Vigor','Indefinite',1,'No fatigue; exert tirelessly; regain 1 HP per hour'],
+  ['Vital Furnace','Day',1,'Negate a non-fatal injury; auto-stabilize at 0 HP and wake in 10 minutes']
+ ],
+ 'Vowed':[
+  ['Martial Style','None',0,'Hit die minimum 1d6; unarmed strikes count as magic weapons at level 3'],
+  ['Unarmed Might','None',0,'Unarmed damage scales with level; add Punch to damage'],
+  ['Unarmored Defense','None',0,'AC 13 + half level when unarmored and without a shield'],
+  ['Brutal Counter','Scene',1,'Free attack after an enemy melee attack on you resolves'],
+  ['Faultless Awareness','None',0,'Cannot be surprised; wake in time to respond to peril'],
+  ['Hurling Throw','Scene',1,'A hit throws the target 10 ft and prone; Physical save negates'],
+  ['The Inward Eye','Indefinite',1,'Mystic awareness like sight; ignore darkness and blindness'],
+  ['Leap of the Heavens','Scene',1,'Leap full Move horizontally or half vertically; negate fall damage'],
+  ['Master\'s Vigor','None',0,'Regain 2 HP per hour naturally'],
+  ['Mob Justice','Day',1,'Immune to Swarm attacks and Shock while in melee with two or more foes'],
+  ['Nimble Ascent','Indefinite',1,'Full speed on vertical or difficult terrain with one free hand'],
+  ['Purified Body','Day',1,'Cure a disease or poison, or need no food, water or air for 24 hours'],
+  ['Revivifying Breath','Day',1,'Heal 1d6 + level; usable at 0 HP; once per scene'],
+  ['Shattering Strike','Day',1,'Destroy objects or deal 1d12 per level to an immobilized target'],
+  ['Style Weaponry','None',0,'Use Punch for three weapon types; Punch does not add to their damage'],
+  ['Unobtrusive Step','Day',1,'Reroll a failed Sneak or impersonation check once per scene']
+ ],
+ 'Bard':[
+  ['A Thousand Tongues','None',0,'Your arts are understood by any intelligent creature; learn languages in a week'],
+  ['Battle Cry','Day',1,'Allies gain +1 to hit, saves and damage for 1 round per level; +2 at 4th, +3 at 9th'],
+  ['Cursed Tune','Scene',1,'Target takes −1 to hit, damage and saves for 1 round per level; −2 at 4th, −3 at 9th'],
+  ['Deft Fingers','None',0,'Readied item limit +2'],
+  ['Entangle Incantation','Scene',1,'Opposed Cha/Perform check to fizzle an enemy caster\'s spell within 60 ft'],
+  ['Evoke Emotion','Day',1,'+1 to social checks for the scene; may force a new reaction roll'],
+  ['Inspire Dread','Day',1,'Enemies make two Morale checks instead of one'],
+  ['Keen Senses','Indefinite',0,'See 60 ft when blinded; perceive invisible creatures and objects'],
+  ['Liberating Song','Scene',1,'Immune to mind and emotion control; allies get a Mental save against such effects'],
+  ['Rally','Day',1,'Remove Frailty from a fallen ally and restore 2d6 + level HP; +1 strain'],
+  ['Soothe the Savage','Day',1,'Animals will not attack you or allies while you perform each round; ends in combat'],
+  ['Soothing Graces','None',0,'You and allies lose one extra strain after a comfortable night\'s rest'],
+  ['Swift Misdirection','Scene',1,'A creature in earshot believes one plausible sentence for one round']
+ ],
+ 'Thought Noble':[
+  ['Open Mind','Indefinite',1,'Read the emotional state of visible living creatures as a Main Action'],
+  ['Block Memory','Day',1,'Target cannot remember a specified event; builds a false memory'],
+  ['Elicitation of Truth','Day',1,'A helpless or cooperative target must fully answer one question'],
+  ['Facile Speech','Scene',1,'Telepathic link with a known creature within 200 ft per level'],
+  ['Hypercognition','Day',1,'Eidetic memory; reroll a failed Int-based skill check as an Instant'],
+  ['Iconograph','Scene',1,'Understand an artifact\'s message or restrict who can read your own'],
+  ['Impress Imperative','Day',1,'Target performs a one-round action; Mental save resists'],
+  ['Mind Light','Indefinite',1,'Detect all living minds within 60 ft; know species and emotion'],
+  ['Mind Over Matter','Day',1,'Stabilize if mortally wounded, skip sleep, heal 1d6, ignore extremes'],
+  ['Mirror Mask','Day',1,'Aware of mind-affecting powers; reroll Mental saves; feed false information'],
+  ['Positive Association','Day',1,'Target treats you as an admired friend for an hour or until harmed'],
+  ['Read Intent','Scene',1,'Know a target\'s next action; Perfect Defense avoids its attacks'],
+  ['Surface Apprehension','Scene',1,'Read a target\'s surface thoughts for one round'],
+  ['Thoughts Like Razors','Day',1,'1d8 per level damage to a visible creature within 60 ft, once per scene'],
+  ['Unthinkable Thought','Day',1,'Target cannot consciously acknowledge a specified person, object or situation']
+ ],
+ 'Accursed':[
+  ['Accursed Blade','None',0,'Manifest a 1d8 melee weapon (2d if two-handed); +Magic to damage; Shock 2/15'],
+  ['Accursed Bolt','None',0,'Hurl 1d8 occult bolts at 200 ft; +Magic to damage; needs both hands'],
+  ['Bewitching Distraction','Day',1,'An intelligent NPC is dazed and forgets you and the scene'],
+  ['Compelling Shriek','Day',1,'Shout a seven-word command; targets obey for a round unless they save'],
+  ['Devil\'s Bargain','None',0,'Consecrate a deal; violators take 1d6 per level'],
+  ['Dire Pact','None',0,'Foes take −Magic on saves against your arts; you gain strain if they succeed'],
+  ['Lying Face','Indefinite',1,'Disguise as any humanoid while committed'],
+  ['Night-Black Eyes','None',0,'See in darkness; identify enchanted objects as a Main Action'],
+  ['Pacted Protection','None',0,'Immune to one natural energy type; half damage from its magical form'],
+  ['Rob Vitality','Scene',1,'A foe loses its Main Action and you gain it, once per scene'],
+  ['Scourging Curse','Scene',1,'Foe takes −1 to hit, damage and saves for a round per level; −2 at 4th, −3 at 9th'],
+  ['Shadowed Steps','Scene',1,'Teleport up to your Move as a Move action'],
+  ['Snaring Speech','Day',1,'On a failed persuade check the target must save or agree; you gain strain'],
+  ['Sorcerous Battery','Day',1,'Refresh an ally\'s spell slot; you gain strain'],
+  ['Soul Consumption','Day',1,'Slay an intelligent target with an Accursed attack; heal 1d6 + level and lose strain'],
+  ['Tendrils of Night','Indefinite',1,'Tentacles manipulate objects 20 ft away; melee at that range'],
+  ['Unseen Steps','Day',1,'Invisible for 1d6 + level rounds; ends if you attack or cast'],
+  ['Weight of Sin','Day',1,'Target loses Move for 1d6 + level rounds on a failed Physical save'],
+  ['Weeping Wounds','Scene',1,'A damaged enemy saves or takes 1d6 per round for 1d6 + level rounds and cannot heal']
+ ],
+ 'Mageslayer':[
+  ['Antimage','None',0,'A free level of the Nullifier focus'],
+  ['Magebane','Indefinite',0,'Add half level, rounded up, to damage against casters'],
+  ['Witchfinder','Scene',1,'Gain the benefits of Apprehend the Arcane Form for the scene'],
+  ['Spellshield','Indefinite',0,'Spell damage against you is halved before saves and resistances'],
+  ['Disrupt Sorcery','Scene',1,'Your next hit stops the target casting or using Mage arts this round'],
+  ['Know Your Prey','Indefinite',0,'Treat Magic as one level higher, to a maximum of 4'],
+  ['Share the Pain','Day',1,'The caster is affected by their spell instead of you, once per round'],
+  ['Dispel Enchantment','Day',1,'Touch an ally to act as Extirpate Arcana on creatures only'],
+  ['Ward Ally','Scene',1,'You are affected by a spell instead of an ally within 30 ft'],
+  ['Immaculate Body','Indefinite',0,'Magical curses last at most one scene and cannot kill you'],
+  ['Immaculate Mind','Indefinite',0,'Immune to mind-affecting spells; see through illusions'],
+  ['Absolute Negation','Day',1,'Ignore an unwanted spell or magical effect about to affect you']
+ ],
+ 'Duelist':[
+  ['Blood for Blood','Scene',1,'Your next attack on a foe that hit you cannot miss and deals at least the damage taken'],
+  ['Burst of Speed','Day',1,'Move your full Move as an On Turn action, once per round'],
+  ['Code Duello','Day',1,'+4 AC and roll twice on hits against a single foe; ends if disrupted'],
+  ['Crushing Superiority','Scene',1,'A hit forces an Instinct check, once per scene per target'],
+  ['Dauntless Step','Scene',1,'Cross vertical surfaces or difficult terrain at full speed this round'],
+  ['Dodge Doom','Day',1,'Half damage from a burst effect; move 10 ft away or behind cover'],
+  ['Forced Engagement','Scene',1,'Ignore one foe\'s Screen Ally action for this attack'],
+  ['Gentleman\'s Withdrawal','Scene',1,'Move at full speed as a Fighting Withdrawal'],
+  ['Graceful Leap','Scene',1,'Leap 10 ft; immune to falls of under 30 ft'],
+  ['Lightning Draw','Day',1,'Win initiative; ready a stowed favored weapon as an Instant'],
+  ['Piercing Strike','Scene',1,'Treat the target\'s AC as 10 for Shock for the rest of the scene'],
+  ['Spiritual Weapon','Indefinite',1,'Manifest a ghostly favored weapon until released'],
+  ['Unbindable','Day',1,'Escape mundane restraints; Evasion save against magical ones'],
+  ['Unworthy Rabble','Day',1,'Reroll failed hits against 1 HD foes (2 HD at level 8)'],
+  ['Whirling Evasion','None',0,'AC 13 + half level; modified by small shields and Dex']
+ ],
+ 'Beastmaster':[
+  ['Bind Companion','None',0,'Find and bind a suitable animal companion'],
+  ['Beast Ward','Scene',1,'Unintelligent beasts will not attack you unless commanded, starving or provoked'],
+  ['Eyes of the Beast','Scene',1,'Share senses with your companion; neither is surprised unless both are'],
+  ['Feral Toughness','Indefinite',0,'Max HP + companion HD; AC 13 + half level; immune to natural heat and cold'],
+  ['Howl of Distant Summons','Day',1,'Call former companions to you within five minutes'],
+  ['Know the Weak Spot','Scene',1,'Roll damage twice against beasts, or let an ally do so, as an Instant'],
+  ['Mind Call','Scene',1,'Telepathic bond with your companion for orders and reports'],
+  ['Natural Weaponry','Indefinite',0,'Unarmed attacks deal 1d8, Shock 2/13, Str or Dex; +1 at levels 3, 6, 9'],
+  ['Savage Senses','Scene',1,'See in darkness, track by scent, +2 on sensory Notice checks'],
+  ['Shared Vitality','Scene',1,'Companion HD at least your level; stabilize a mortally wounded companion'],
+  ['Swift Healing','Day',1,'Heal your companion 1d6 per level, once per scene'],
+  ['Tongue of the Beasts','Scene',1,'Speak with animals as if they had human intellect']
+ ],
+ 'Blood Priest':[
+  ['A Thousand Tongues','Indefinite',1,'Any sentient creature hears you in its own language'],
+  ['Armor of God','Indefinite',1,'Natural AC 15 + half level; shields and Dex apply, worn armor does not'],
+  ['Divine Guidance','Day',1,'Learn whether a choice leads to weal, woe, both or nothing within an hour'],
+  ['Fear No Flame','Scene',1,'Target is immune to mundane flame; magical flame damage reduced by 5 per level'],
+  ['God Wills It','Scene',1,'Up to 6 allies per level gain Morale 12 and +1 to hit and damage; +2 at 5th, +3 at 10th'],
+  ['Merciful Healing','Day',1,'Touch to heal 1d6+2 (2d6+4 at 4th, 4d6+8 at 8th); +1 strain if in combat'],
+  ['Sanctified Ward','Indefinite',1,'Immune to Shock, +4 AC and saves; enemies need an Instinct check to target you'],
+  ['Smite the Wicked','Day',1,'+4 to hit, automatic damage equal to level, roll damage twice; once per scene per target'],
+  ['The Light of Faith','Indefinite',1,'Bright light for 30 ft, visible only to you and up to a dozen allies'],
+  ['Transubstantiation','Day',1,'Turn a gallon of liquid into holy blood that heals 1d6 + Pray once per day'],
+  ['Turn False Life','Day',1,'2d6 + level HD of undead or automatons cower; not those with twice your HD'],
+  ['Words of Mercy','Day',1,'Reroll a failed social check made for peace, compassion or truth'],
+  ['Wrath of the Most High','Scene',1,'The next damage the target takes before the end of next round adds 1d8 + level']
+ ],
+ 'Skinshifter':[
+  ['Change Form','Day',1,'Transform into an alternate form as a Main Action; keep HP and strain; form bonus replaces attack bonus'],
+  ['Eyes of the Hawk','None',0,'+2 on sensory Notice checks; scent, keen hearing and sight in near darkness'],
+  ['Feline Leap','None',0,'Jump your full Move as a Move action; subtract Move from fall distance'],
+  ['Feral Prowess','None',0,'+1 to Str, Dex or Con modifier in this form, max +2'],
+  ['Intrinsic Armor','None',0,'Base AC 14 + half level in this form; Dex and shields apply'],
+  ['Manifest Wings','None',0,'Fly at Move + 10 ft per action; cannot attack while aloft'],
+  ['Octopus\' Embrace','None',0,'Extra limbs hold up to four stowed items ready without encumbrance'],
+  ['Perfect Mimicry','None',0,'Exactly duplicate a creature from hair, blood or ten minutes of observation'],
+  ['Pliant Flesh','None',0,'Change Form as an On Turn action once per round, or free in a minute; heal 1d6 + level when you spend Effort to shift'],
+  ['Savage Talons','None',0,'Natural weapons deal 1d8, Punch skill, Str or Dex; +1 damage and Shock at levels 3, 6, 9'],
+  ['Sculptor\'s Beauty','None',0,'+1 Charisma modifier in this form, max +2; visibly uncanny'],
+  ['Serpent\'s Kiss','Scene',1,'Venomous natural weapons: +1d8 + Survive damage, or paralysis'],
+  ['The Monkey\'s Road','None',0,'Climb sheer surfaces at full Move with three limbs free'],
+  ['Warform','None',0,'+2 to melee hit rolls; use the form bonus in humanoid shape'],
+  ['Wisdom of Fin and Scale','None',0,'Breathe water, swim at double Move, immune to cold and pressure']
+ ],
+ 'Wise':[
+  ['Dread Awe','None',0,'+1 on intimidation; curse foes in battle for −1 Morale, once per scene'],
+  ['Elite Ties','None',0,'Audiences with important figures; one small favor per session'],
+  ['Erudite','None',0,'Reroll a failed intellectual skill check once per day'],
+  ['Folk-Friend','None',0,'A modest favor from a commoner once per day for a blessing or advice'],
+  ['Healer','None',0,'+1 on Heal checks; stabilize a mortally wounded ally as an On Turn once per day'],
+  ['Holy Sanctity','None',0,'+1 on social checks with locals; respected across the region'],
+  ['Personal Impunity','None',0,'It is taboo to harm you; only the vicious or desperate will'],
+  ['Skilled','None',0,'Three skill points for non-combat skills; may be taken again'],
+  ['Compel Truth','None',0,'Ritual forces a target to answer one question truthfully; Cha/Magic vs Morale + 1'],
+  ['Deliver Oracle','None',0,'Day-long ritual for an oracular answer; Wis/Magic sets clarity'],
+  ['Find Object','None',0,'Scene ritual locates a known object or animal; Wis/Magic, once per day'],
+  ['Read Omens','None',0,'Scene ritual judges a plan\'s success; Wis/Magic vs 10; costs 10+ sp of materials'],
+  ['Auspicious Undertaking','None',0,'Bless a plan with one reroll; lasts until used or one day per level'],
+  ['Evil Eye','None',0,'Use curse and blessing arts as an Instant with a look'],
+  ['Ill Fate','None',0,'Curse a target with −1 on its next relevant check; disaster on a low roll'],
+  ['Luck Blessing','None',0,'Bless a target with +1 on its next skill check that day; one at a time'],
+  ['War Curse','None',0,'Curse an enemy with −2 to hit, damage and Shock for the scene']
+ ]
+};
+
 const ALL_SKILLS=SKILLS.map(x=>x[0]);
 const VOWED_DMG=['1d6','1d6','1d8','1d8','1d10','1d10','1d10+1','1d10+1','1d10+2','1d10+3'];
 /* Class attacks and frequently used actions. kind 'action' rows have no roll.
@@ -722,6 +1005,9 @@ function onChange(path,el){
   if(/^weapons\.\d+\.name$/.test(path)){const i=+path.split('.')[1],nm=(C.weapons[i].name||'').trim().toLowerCase(),w=WEAPONS.find(x=>x.n.toLowerCase()===nm),a=ACTIONS.find(x=>x.n.toLowerCase()===nm);
     if(w){Object.assign(C.weapons[i],{kind:'attack',dmg:w.d,shock:w.s,attr:w.a,skill:w.sk,range:w.r,traits:w.t,enc:w.e,readied:true,scale:''});reload(el.closest('tr'));}
     else if(a){Object.assign(C.weapons[i],{kind:a.kind,dmg:a.d||'',shock:a.s||'',attr:a.a,skill:a.sk,range:a.r||'',traits:a.t||'',enc:0,readied:false,scale:a.scale||''});reload(el.closest('tr'));}}
+  if(/^foci\.\d+\.(name|level)$/.test(path)){const i=+path.split('.')[1],f=C.foci[i];const t=focusText(f.name,f.level);if(t!=null){const other=focusText(f.name,+f.level===2?1:2);if(path.endsWith('.name')||!f.notes||f.notes===other){f.notes=t;reload(el.closest('.fx'));}}}
+  if(/^arts\.\d+\.name$/.test(path)){const i=+path.split('.')[1],a=C.arts[i];const d=(ARTS_DATA[a.pool]||[]).find(x=>x[0].toLowerCase()===(a.name||'').trim().toLowerCase());if(d){a.commit=d[1];a.cost=d[2];a.desc=d[3];reload(el.closest('tr'));el.closest('tr').querySelector('.art-desc').title=a.desc;}}
+  if(/^arts\.\d+\.desc$/.test(path)){el.title=el.value;}
   if(path==='classType'||path==='tradition'||path==='partialA'||path==='partialB'){renderArts();}
   if(path==='name')C.isExample=false;
   if(path==='level')C.level=clamp(+C.level||1,1,10);
@@ -732,7 +1018,7 @@ function renderAttrs(){
   bind($('#attrs'));
 }
 function renderSkills(){
-  $('#skills').innerHTML=SKILLS.map(([n])=>`<tr data-skill="${n}"><td><b>${n}</b></td><td class="c"><select data-bind="skills.${n}" style="width:76px">${[-1,0,1,2,3,4].map(v=>`<option value="${v}">${v<0?'—':v}</option>`).join('')}</select></td><td><select data-bind="skillAttr.${n}" style="width:80px">${opts(ATTRS)}</select></td><td class="calc" data-out="sk${n}"></td><td><input data-bind="skillNotes.${n}" placeholder=""></td></tr>`).join('');
+  $('#skills').innerHTML=SKILLS.map(([n])=>`<tr data-skill="${n}"><td><b>${n}</b></td><td class="c"><select data-bind="skills.${n}" class="sk-sel" style="width:64px">${[-1,0,1,2,3,4].map(v=>`<option value="${v}">${v<0?'—':v}</option>`).join('')}</select></td><td class="c"><select data-bind="skillAttr.${n}" class="sk-sel" style="width:70px">${opts(ATTRS)}</select></td><td class="calc" data-out="sk${n}"></td><td><input data-bind="skillNotes.${n}" placeholder=""></td></tr>`).join('');
   bind($('#skills'));
 }
 function renderWeapons(){
@@ -751,8 +1037,9 @@ function renderWeapons(){
     <td><button class="rm" data-remove="weapons:${i}" title="Remove this row">Remove</button></td></tr>`).join('')||`<tr><td colspan="12" class="hint">Nothing here yet. Add a row, then pick a weapon or class action from the name box to fill in its numbers.</td></tr>`;
   bind($('#weapons'));
 }
+function focusText(name,level){const d=FOCI_DATA.find(f=>f[0].toLowerCase()===(name||'').trim().toLowerCase());if(!d)return null;return +level===2?`Level 1: ${d[1]} Level 2: ${d[2]}`:d[1];}
 function renderFoci(){
-  $('#foci').innerHTML=C.foci.map((f,i)=>`<div class="fx"><input data-bind="foci.${i}.name" list="focusList" placeholder="Focus name"><select data-bind="foci.${i}.level"><option value="1">Lvl 1</option><option value="2">Lvl 2</option></select><button class="ghost" data-remove="foci:${i}" title="Remove">✕</button><textarea data-bind="foci.${i}.notes" rows="1" placeholder="What it does for you"></textarea></div>`).join('')||`<div class="hint">No foci yet.</div>`;
+  $('#foci').innerHTML=C.foci.map((f,i)=>`<div class="fx"><input data-bind="foci.${i}.name" list="focusList" placeholder="Focus name" title="Type or pick a focus"><select data-bind="foci.${i}.level"><option value="1">Lvl 1</option><option value="2">Lvl 2</option></select><button class="rm" data-remove="foci:${i}">Remove</button><textarea data-bind="foci.${i}.notes" rows="1" placeholder="What it does for you"></textarea></div>`).join('')||`<div class="hint">No foci yet.</div>`;
   bind($('#foci'));
 }
 function renderItems(){
@@ -768,7 +1055,7 @@ function renderArts(){
   const others=C.arts.map((a,i)=>[a,i]).filter(([a])=>!keys.includes(a.pool));
   const groups=keys.map(k=>({key:k,title:k==='—'?'Arts':k+' arts',rows:C.arts.map((a,i)=>[a,i]).filter(([a])=>a.pool===k)}));
   if(others.length)groups.push({key:'—',title:'Other arts',rows:others});
-  const row=(a,i)=>`<tr><td class="w-name"><input data-bind="arts.${i}.name" placeholder="Art"></td><td class="c"><input type="number" data-bind="arts.${i}.cost" min="0" style="width:52px"></td><td><select data-bind="arts.${i}.commit" style="width:110px">${opts(COMMITS)}</select></td><td class="c"><div class="tracker" style="justify-content:center"><button class="step" data-action="artFree:${i}" title="Release one commitment" aria-label="Release">−</button><b class="num" style="min-width:1.4em;text-align:center" data-out="artUses${i}">${+a.uses||0}</b><button class="step" data-action="artUse:${i}" title="Use: commit effort" aria-label="Use">+</button></div></td><td><input data-bind="arts.${i}.desc" placeholder="Effect"></td><td><button class="rm" data-remove="arts:${i}">Remove</button></td></tr>`;
+  const row=(a,i)=>`<tr><td class="w-name"><input data-bind="arts.${i}.name" list="artList-${(a.pool||'').replace(/\W+/g,'-')}" placeholder="Art" title="Type or pick an art"></td><td class="c"><input type="number" data-bind="arts.${i}.cost" min="0" style="width:52px"></td><td><select data-bind="arts.${i}.commit" style="width:110px">${opts(COMMITS)}</select></td><td class="c"><div class="tracker" style="justify-content:center"><button class="step" data-action="artFree:${i}" title="Release one commitment" aria-label="Release">−</button><b class="num" style="min-width:1.4em;text-align:center" data-out="artUses${i}">${+a.uses||0}</b><button class="step" data-action="artUse:${i}" title="Use: commit effort" aria-label="Use">+</button></div></td><td class="desc-cell"><input class="art-desc" data-bind="arts.${i}.desc" placeholder="Effect" title="${esc(a.desc||'')}"></td><td><button class="rm" data-remove="arts:${i}">Remove</button></td></tr>`;
   $('#artsGroups').innerHTML=groups.map(g=>`<div class="art-group"><h3>${esc(g.title)}</h3><div class="tbl-wrap"><table><thead><tr><th>Art</th><th class="c">Cost</th><th>Committed for</th><th class="c" title="How many commitments are currently out">In use</th><th>Effect / notes</th><th></th></tr></thead><tbody>${g.rows.map(([a,i])=>row(a,i)).join('')||`<tr><td colspan="6" class="hint">No arts yet.</td></tr>`}</tbody></table></div><div class="list-actions"><button data-action="addArt:${esc(g.key)}">+ Add art</button></div></div>`).join('');
   bind($('#artsGroups'));
 }
@@ -776,6 +1063,7 @@ function renderStatic(){
   $('#bgList').innerHTML=BACKGROUNDS.map(b=>`<option value="${esc(b)}">`).join('');
   $('#weaponList').innerHTML=ACTIONS.map(a=>`<option value="${esc(a.n)}">`).join('')+WEAPONS.map(w=>`<option value="${esc(w.n)}">`).join('');
   $('#focusList').innerHTML=FOCI.map(f=>`<option value="${esc(f)}">`).join('');
+  $('#artLists').innerHTML=Object.keys(ARTS_DATA).map(k=>`<datalist id="artList-${k.replace(/\W+/g,'-')}">${ARTS_DATA[k].map(a=>`<option value="${esc(a[0])}">`).join('')}</datalist>`).join('');
   $('#armorSel').innerHTML=opts(ARMORS.map(a=>a.n));$('#shieldSel').innerHTML=opts(SHIELDS.map(s=>s.n));
   $('#traditionSel').innerHTML=opts(TRADITIONS);$('#partialASel').innerHTML=opts(PARTIAL_NAMES);$('#partialBSel').innerHTML=opts(PARTIAL_NAMES);
   $('#vowedSel').innerHTML=opts(SKILLS.map(s=>s[0]).filter(s=>!['Stab','Shoot','Punch'].includes(s)));
