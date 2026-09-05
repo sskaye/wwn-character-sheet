@@ -1,0 +1,902 @@
+<title>Latter Earth Ledger</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;1,500&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+:root{
+  --bg:#ECEAE4; --surface:#FFFFFF; --surface2:#F4F3EF; --surface3:#E6E3DB; --ink:#1E1C18; --muted:#6E6A61; --line:#D8D4CA;
+  --accent:#7B2D2D; --accent-ink:#FFFFFF; --accent-soft:#F1E3E3; --magic:#2F6F62; --magic-soft:#E1EEEA;
+  --good:#2E7D4F; --warn:#B4731C; --crit:#B23A3A; --shadow:0 1px 2px rgba(30,28,24,.08),0 4px 14px rgba(30,28,24,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16171A; --surface:#212328; --surface2:#2A2C32; --surface3:#34373F; --ink:#E8E5DD; --muted:#A09C92; --line:#3B3E46;
+    --accent:#D68282; --accent-ink:#1A1A1A; --accent-soft:#3A2A2A; --magic:#79C7B2; --magic-soft:#233732;
+    --good:#6CC08E; --warn:#E0A64C; --crit:#E07070; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16171A; --surface:#212328; --surface2:#2A2C32; --surface3:#34373F; --ink:#E8E5DD; --muted:#A09C92; --line:#3B3E46;
+  --accent:#D68282; --accent-ink:#1A1A1A; --accent-soft:#3A2A2A; --magic:#79C7B2; --magic-soft:#233732;
+  --good:#6CC08E; --warn:#E0A64C; --crit:#E07070; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body[data-leveling="milestone"] .xp-only{display:none!important}
+body[data-enc="off"] .enc-only,html[data-enc="off"] .enc-only{display:none!important}
+body[data-enc="on"] .enc-off-only{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Source Sans 3","Source Sans Pro",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.4;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Alegreya,Georgia,"Times New Roman",serif;margin:0;font-weight:700;text-wrap:balance}
+h2{font-size:1.25rem;color:var(--accent);letter-spacing:.01em}
+h3{font-size:1.05rem}
+button,input,select,textarea{font:inherit;color:inherit}
+input,select,textarea{background:var(--surface2);border:1px solid transparent;border-radius:6px;padding:6px 8px;min-width:0;width:100%;transition:border-color .12s,background .12s}
+input:hover,select:hover,textarea:hover{border-color:var(--line)}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+textarea{resize:vertical;min-height:72px;line-height:1.45}
+input[type=number]{font-variant-numeric:tabular-nums;text-align:center;-moz-appearance:textfield}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=checkbox]{width:18px;height:18px;padding:0;accent-color:var(--accent);margin:0;cursor:pointer}
+select{cursor:pointer;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 13px) 55%,calc(100% - 8px) 55%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:24px}
+button{background:var(--surface2);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;font-weight:600;white-space:nowrap}
+button:hover{background:var(--surface3)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.primary:hover{filter:brightness(1.08)}
+button.ghost{background:transparent;border-color:transparent;color:var(--muted);padding:4px 8px}
+button.ghost:hover{color:var(--crit);background:var(--surface2)}
+button.danger{color:var(--crit)}
+button.step{width:32px;height:32px;padding:0;font-size:1.1rem;line-height:1;border-radius:50%}
+.lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+.hint{font-size:.8rem;color:var(--muted);line-height:1.35}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.field{display:flex;flex-direction:column;gap:3px}
+.field .lbl{padding-left:2px}
+
+/* ---------- vitals strip ---------- */
+.vitals{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+.vitals-inner{max-width:1240px;margin:0 auto;padding:10px 16px 8px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:stretch}
+.who{display:flex;flex-direction:column;justify-content:center;min-width:180px;flex:1 1 200px}
+.who h1{font-size:1.55rem;line-height:1.1;font-weight:700}
+.who .sub{color:var(--muted);font-size:.9rem;margin-top:2px}
+.vital{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;padding:0 4px;min-width:56px}
+.vital .big{font-size:1.7rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.vital .big.magic{color:var(--magic)}
+.vital .sub{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.tracker{display:flex;align-items:center;gap:4px}
+.tracker input{width:56px;font-size:1.35rem;font-weight:700;padding:2px 4px;background:transparent;border:1px solid var(--line)}
+.tracker .max{font-size:1rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.saves{display:flex;gap:6px}
+.saves .sv{display:flex;flex-direction:column;align-items:center;min-width:40px}
+.saves .sv b{font-size:1.25rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.saves .sv span{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.vitals .actions{display:flex;gap:6px;align-items:center;margin-left:auto}
+.vital-sep{width:1px;background:var(--line);margin:4px 0}
+.hp-warn .tracker input{border-color:var(--crit);color:var(--crit)}
+.strain-warn .tracker input{border-color:var(--warn);color:var(--warn)}
+
+/* ---------- tabs ---------- */
+.tabs{max-width:1240px;margin:0 auto;padding:0 16px;display:flex;gap:4px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--line)}
+.tabs .mode{margin-left:auto;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:999px;padding:4px 14px;margin-top:4px;margin-bottom:4px}
+.tabs .mode:hover{background:var(--accent-soft)}
+body[data-mode="edit"] .tabs .mode{background:var(--accent);color:var(--accent-ink)}
+.tabs button[role=tab]{background:transparent;border:1px solid transparent;border-bottom:2px solid transparent;border-radius:0;color:var(--muted);padding:8px 14px}
+.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.tabs button[role=tab]:hover{color:var(--ink)}
+main{max-width:1240px;margin:0 auto;padding:14px 16px 64px}
+[data-panel]{display:none}
+[data-panel].active{display:block}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;grid-column:span 12;min-width:0}
+.panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.panel-head .hint{margin-left:auto;text-align:right}
+.span4{grid-column:span 4}.span5{grid-column:span 5}.span6{grid-column:span 6}.span7{grid-column:span 7}.span8{grid-column:span 8}.span3{grid-column:span 3}
+@media (max-width:900px){.span4,.span5,.span6,.span7,.span8,.span3{grid-column:span 12}}
+
+/* ---------- attributes ---------- */
+.attrs{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+@media (max-width:700px){.attrs{grid-template-columns:repeat(3,1fr)}}
+.attr{background:var(--surface2);border-radius:8px;padding:8px 6px 6px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.attr .lbl{font-size:.8rem}
+.attr input.score{width:64px;font-size:1.6rem;font-weight:700;padding:2px;background:var(--surface);border:1px solid var(--line)}
+.attr .mod{font-size:1.1rem;font-weight:700;font-variant-numeric:tabular-nums}
+.attr .adj{display:flex;align-items:center;gap:3px;font-size:.72rem;color:var(--muted)}
+.attr .adj input{width:36px;font-size:.8rem;padding:1px}
+
+.save-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.save-tile{background:var(--surface2);border-radius:8px;padding:10px 8px;text-align:center}
+.save-tile b{display:block;font-size:1.7rem;line-height:1.05;font-variant-numeric:tabular-nums}
+.save-tile .lbl{display:block;margin-bottom:2px}
+.save-tile .hint{margin-top:3px}
+
+/* ---------- tables ---------- */
+.tbl-wrap{overflow-x:auto;margin:0 -4px}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600;padding:4px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:4px 4px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+td input,td select{padding:5px 6px}
+td.c,th.c{text-align:center}
+td.calc{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;text-align:center}
+td.calc.magic{color:var(--magic)}
+.w-name{min-width:150px}.w-xs{width:56px}.w-s{width:76px}.w-m{width:100px}.w-sel{min-width:90px}
+tr.untrained td{color:var(--muted)}
+tr.untrained td.calc{color:var(--muted)}
+
+/* ---------- misc components ---------- */
+.list-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.pool{display:flex;align-items:center;gap:12px;background:var(--magic-soft);border-radius:8px;padding:10px 12px;flex-wrap:wrap}
+.pool .big{font-size:1.6rem;font-weight:700;color:var(--magic);font-variant-numeric:tabular-nums}
+.pool .formula{font-size:.8rem;color:var(--muted);flex:1 1 200px}
+.pool .adj{display:flex;align-items:center;gap:6px;font-size:.8rem}
+.pool .adj input{width:52px}
+.art-group h3{color:var(--magic);margin-bottom:6px}
+.setting{display:flex;align-items:flex-start;gap:10px;margin-top:16px;cursor:pointer}
+.setting input{flex:none;margin-top:3px}
+.setting>span{flex:1;min-width:0}
+.meter{height:8px;background:var(--surface3);border-radius:4px;overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;background:var(--good);border-radius:4px;transition:width .2s}
+.meter i.warn{background:var(--warn)}.meter i.crit{background:var(--crit)}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.78rem;font-weight:600;background:var(--surface3)}
+.pill.good{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.pill.warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.pill.crit{background:color-mix(in srgb,var(--crit) 18%,transparent);color:var(--crit)}
+.features li{margin:4px 0}
+.features b{color:var(--accent)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center;font-size:.92rem}
+.kv .lbl{font-size:.7rem}
+.enc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.enc-box{background:var(--surface2);border-radius:8px;padding:10px 12px}
+.enc-box .big{font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums}
+.enc-box .big span{font-size:1rem;color:var(--muted);font-weight:600}
+.money{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.xpbar{margin-top:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:600px){.two{grid-template-columns:1fr}}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media (max-width:600px){.three{grid-template-columns:1fr}}
+.example-note{background:var(--accent-soft);border-radius:8px;padding:8px 12px;font-size:.9rem;margin-bottom:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.example-note button{margin-left:auto}
+.chars{display:flex;gap:6px;align-items:center}
+.chars select{width:auto;max-width:200px;padding:5px 26px 5px 8px}
+.io textarea{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8rem;min-height:120px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50}
+.toast.show{opacity:1}
+.fx-list{display:flex;flex-direction:column;gap:6px}
+.fx{display:grid;grid-template-columns:1fr 70px auto;gap:8px;align-items:start}
+.fx textarea{min-height:36px;grid-column:1/-1}
+.sr{position:absolute;left:-9999px}
+.untr{font-size:.5rem;color:var(--muted);opacity:.7;vertical-align:super;margin-left:1px}
+button.rm{padding:2px 8px;font-size:.8rem;color:var(--muted)}
+button.rm:hover{color:var(--crit);border-color:var(--crit)}
+/* Play mode: infrequently edited fields read as plain text; controls disappear */
+body[data-mode="play"] .edit-only,body[data-mode="play"] .pv .list-actions,body[data-mode="play"] .pv .rm,body[data-mode="play"] .pv .ghost{display:none!important}
+body[data-mode="play"] .pv input:not(.play-edit):not([type=checkbox]),body[data-mode="play"] .pv select:not(.play-edit),body[data-mode="play"] .pv textarea:not(.play-edit){background:transparent;border-color:transparent;pointer-events:none;box-shadow:none;color:inherit}
+body[data-mode="play"] .pv select:not(.play-edit){background-image:none;padding-right:2px}
+body[data-mode="play"] .pv input[type=checkbox]:not(.play-edit){pointer-events:none}
+body[data-mode="play"] .pv textarea:not(.play-edit){field-sizing:content;min-height:0;resize:none}
+body[data-mode="play"] .pv ::placeholder{color:transparent}
+body[data-mode="play"] .pv .attr input.score{background:transparent;border-color:transparent}
+body[data-mode="play"] .pv td input:not(.play-edit),body[data-mode="play"] .pv td select:not(.play-edit){padding-left:2px;padding-right:2px;width:auto;min-width:2ch;max-width:100%;field-sizing:content}
+body[data-mode="play"] .pv td .w-name input{min-width:8ch}
+body[data-mode="play"] .pv .field .lbl{opacity:.85}
+body[data-mode="play"] .pv .fx{grid-template-columns:1fr 70px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  .vitals{position:static;box-shadow:none}.tabs,.actions,.list-actions,button{display:none!important}
+  [data-panel]{display:block!important;page-break-inside:avoid}body{background:#fff;color:#000}
+  .panel{border-color:#999;break-inside:avoid}input,select,textarea{background:transparent;border:1px solid #bbb}
+}
+</style>
+
+<header class="vitals">
+  <div class="vitals-inner">
+    <div class="who">
+      <h1 data-out="name">—</h1>
+      <div class="sub"><span data-out="classLine"></span> · Level <span data-out="level"></span><span class="xp-only"> · <span data-out="xpLine"></span></span></div>
+    </div>
+    <div class="vital" id="hpVital">
+      <span class="lbl">Hit points</span>
+      <div class="tracker"><button class="step" data-step="hp.cur:-1" aria-label="Lose 1 HP">−</button><input type="number" class="play-edit" data-bind="hp.cur" aria-label="Current HP"><span class="max">/ <span data-out="hpMax">0</span></span><button class="step" data-step="hp.cur:1" aria-label="Gain 1 HP">+</button></div>
+    </div>
+    <div class="vital" id="strainVital">
+      <span class="lbl">System strain</span>
+      <div class="tracker"><button class="step" data-step="strain.cur:-1" aria-label="Reduce strain">−</button><input type="number" class="play-edit" data-bind="strain.cur" aria-label="Current system strain"><span class="max">/ <span data-out="strainMax">0</span></span><button class="step" data-step="strain.cur:1" aria-label="Add strain">+</button></div>
+    </div>
+    <div class="vital-sep"></div>
+    <div class="vital"><span class="lbl">AC</span><span class="big" data-out="ac">10</span></div>
+    <div class="vital"><span class="lbl">Attack</span><span class="big" data-out="atk">+0</span></div>
+    <div class="vital"><span class="lbl">Init</span><span class="big" data-out="init">+0</span></div>
+    <div class="vital" id="moveVital"><span class="lbl">Move</span><span class="big"><span data-out="move">30</span> <span class="sub" style="font-size:.9rem;font-weight:600">ft</span></span></div>
+    <div class="vital-sep"></div>
+    <div class="vital"><span class="lbl">Saves (d20 ≥)</span>
+      <div class="saves">
+        <div class="sv"><b data-out="savePhys">15</b><span>Phys</span></div>
+        <div class="sv"><b data-out="saveEvade">15</b><span>Evade</span></div>
+        <div class="sv"><b data-out="saveMental">15</b><span>Mental</span></div>
+        <div class="sv"><b data-out="saveLuck">15</b><span>Luck</span></div>
+      </div>
+    </div>
+    <div id="effortVitals" style="display:contents"></div>
+    <div class="actions">
+      <button data-action="endScene" title="Release effort committed for the scene">End scene</button>
+      <button data-action="rest" title="New day: recover HP equal to level, −1 system strain, reset daily casts and effort">Rest</button>
+    </div>
+  </div>
+<nav class="tabs" role="tablist">
+  <button role="tab" data-tab="play" aria-selected="true">Play</button>
+  <button role="tab" data-tab="skills">Skills &amp; Foci</button>
+  <button role="tab" data-tab="gear">Gear</button>
+  <button role="tab" data-tab="magic">Magic &amp; Arts</button>
+  <button role="tab" data-tab="character">Character</button>
+  <button role="tab" data-tab="data">Save / Load</button>
+  <button role="tab" data-tab="settings">Settings</button>
+  <button id="modeBtn" class="mode" title="Switch between play mode and edit mode">Edit</button>
+</nav>
+</header>
+
+
+<main>
+<div class="example-note" id="exampleNote" hidden>
+  <span>This is a sample character so you can see how the sheet works. Edit it freely, or start your own.</span>
+  <button class="primary" data-action="newChar">New character</button>
+</div>
+
+<!-- ================= PLAY ================= -->
+<section data-panel="play" class="pv active">
+<div class="grid">
+  <div class="panel span7">
+    <div class="panel-head"><h2>Attributes</h2></div>
+    <div class="attrs" id="attrs"></div>
+  </div>
+  <div class="panel span5">
+    <div class="panel-head"><h2>Saving throws</h2><span class="hint">16 − level − best modifier. Luck has no modifier.</span></div>
+    <div class="save-tiles">
+      <div class="save-tile"><span class="lbl">Physical</span><b data-out="savePhys">15</b><div class="hint">Str / Con</div></div>
+      <div class="save-tile"><span class="lbl">Evasion</span><b data-out="saveEvade">15</b><div class="hint">Dex / Int</div></div>
+      <div class="save-tile"><span class="lbl">Mental</span><b data-out="saveMental">15</b><div class="hint">Wis / Cha</div></div>
+      <div class="save-tile"><span class="lbl">Luck</span><b data-out="saveLuck">15</b><div class="hint">none</div></div>
+    </div>
+    <div class="hint" style="margin-top:10px">Roll 1d20 and meet or beat the number. Natural 1 always fails, natural 20 always succeeds.</div>
+  </div>
+
+  <div class="panel span12">
+    <div class="panel-head"><h2>Attacks &amp; actions</h2><span class="hint">Roll = d20 + attack bonus + skill + attribute (−2 untrained)</span></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Attack / action</th><th>Skill</th><th>Attr</th><th class="c">Roll</th><th>Damage / effect</th><th>Shock</th><th>Range</th><th>Traits</th><th class="c enc-only">Enc</th><th class="c enc-only" title="Counts toward readied encumbrance">Rdy</th><th class="c" title="Bonus: added to the roll for attacks, to the damage or effect for actions">+</th><th></th></tr></thead>
+      <tbody id="weapons"></tbody>
+    </table></div>
+    <div class="list-actions"><button data-action="addWeapon">+ Add row</button></div>
+    <div class="hint" style="margin-top:8px" data-out="dmgNote"></div>
+  </div>
+
+  <div class="panel span4">
+    <div class="panel-head"><h2>Armor</h2><span class="hint">AC = armor + Dex</span></div>
+    <div class="field"><span class="lbl">Armor</span><select data-bind="armor.name" id="armorSel"></select></div>
+    <div class="row" style="margin-top:6px">
+      <div class="field" style="flex:1"><span class="lbl">Base AC</span><input type="number" data-bind="armor.ac"></div>
+      <div class="field enc-only" style="flex:1"><span class="lbl">Enc</span><input type="number" data-bind="armor.enc" step="0.5"></div>
+      <label class="field" style="align-items:center"><span class="lbl">Worn</span><input type="checkbox" data-bind="armor.worn" style="margin-top:6px"></label>
+    </div>
+    <div class="field" style="margin-top:10px"><span class="lbl">Shield</span><select data-bind="shield.name" id="shieldSel"></select></div>
+    <div class="row" style="margin-top:6px">
+      <div class="field" style="flex:1"><span class="lbl">Shield AC</span><input type="number" data-bind="shield.ac"></div>
+      <div class="field enc-only" style="flex:1"><span class="lbl">Enc</span><input type="number" data-bind="shield.enc" step="0.5"></div>
+      <label class="field" style="align-items:center"><span class="lbl">Carried</span><input type="checkbox" data-bind="shield.worn" style="margin-top:6px"></label>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div class="field" style="flex:1"><span class="lbl">Other AC bonus</span><input type="number" data-bind="acMisc"></div>
+      <div class="field" style="flex:2"><span class="lbl">Armor class</span><div><span class="big num" style="font-size:1.6rem;font-weight:700" data-out="ac"></span> <span class="hint" data-out="acNote"></span></div></div>
+    </div>
+  </div>
+
+  <div class="panel span4">
+    <div class="panel-head"><h2>Class features</h2></div>
+    <ul class="features" id="features" style="margin:0;padding-left:18px"></ul>
+  </div>
+  <div class="panel span4">
+    <div class="panel-head"><h2>In play</h2><span class="hint">Conditions, active effects, scratch notes</span></div>
+    <textarea class="play-edit" data-bind="conditions" rows="5" placeholder="Poisoned (save each hour) · Blessed +1 to hit until end of scene · Owes the innkeeper 12 sp…"></textarea>
+  </div>
+</div>
+</section>
+
+<!-- ================= SKILLS ================= -->
+<section data-panel="skills" class="pv">
+<div class="grid">
+  <div class="panel span7">
+    <div class="panel-head"><h2>Skills</h2><span class="hint">Check = 2d6 + skill + attribute</span></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Skill</th><th class="c">Level</th><th>Attribute</th><th class="c">Check</th><th>Notes</th></tr></thead>
+      <tbody id="skills"></tbody>
+    </table></div>
+    <div class="row edit-only" style="margin-top:12px">
+      <div class="field"><span class="lbl">Unspent skill points</span><input type="number" data-bind="skillPoints" style="width:80px"></div>
+      <div class="hint" style="flex:1" data-out="skillNote"></div>
+    </div>
+  </div>
+  <div class="panel span5">
+    <div class="panel-head"><h2>Foci</h2><span class="hint" data-out="fociNote"></span></div>
+    <div class="fx-list" id="foci"></div>
+    <div class="list-actions"><button data-action="addFocus">+ Add focus</button></div>
+  </div>
+</div>
+</section>
+
+<!-- ================= GEAR ================= -->
+<section data-panel="gear" class="pv">
+<div class="grid">
+  <div class="panel span8">
+    <div class="panel-head"><h2>Equipment</h2><span class="hint"><span class="enc-only">Readied gear is in hand or on your belt. Stowed gear takes a Main Action to retrieve. Three small items bundle into 1 Enc.</span><span class="enc-off-only">Encumbrance tracking is off (Settings).</span></span></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Item</th><th class="c">Qty</th><th class="c enc-only">Enc each</th><th class="enc-only">Where</th><th>Notes</th><th></th></tr></thead>
+      <tbody id="items"></tbody>
+    </table></div>
+    <div class="list-actions"><button class="enc-only" data-action="addItem:readied">+ Readied item</button><button class="enc-only" data-action="addItem:stowed">+ Stowed item</button><button class="enc-only" data-action="addItem:other">+ Elsewhere (mount, camp, home)</button><button class="enc-off-only" data-action="addItem:stowed">+ Add item</button></div>
+  </div>
+  <div class="panel span4 enc-only">
+    <div class="panel-head"><h2>Encumbrance</h2></div>
+    <div class="enc-grid">
+      <div class="enc-box"><span class="lbl">Readied</span><div class="big"><span data-out="encR">0</span> <span>/ <span data-out="encRLim">5</span></span></div><div class="meter"><i data-meter="encR"></i></div><div class="hint">Limit: half Str, rounded down</div></div>
+      <div class="enc-box"><span class="lbl">Stowed</span><div class="big"><span data-out="encS">0</span> <span>/ <span data-out="encSLim">10</span></span></div><div class="meter"><i data-meter="encS"></i></div><div class="hint">Limit: Str score</div></div>
+    </div>
+    <div style="margin-top:12px"><span class="pill" data-out="encStatus">Unencumbered</span> <span class="hint" data-out="encNote"></span></div>
+    <div class="hint" style="margin-top:8px">Weapons marked Rdy, worn armor and a carried shield count as readied automatically. Up to +2 readied / +4 stowed over the limit is Lightly encumbered (Move 20 ft); up to +4 / +8 is Heavily encumbered (Move 10 ft).</div>
+  </div>
+  <div class="panel span4">
+    <div class="panel-head"><h2>Money</h2></div>
+    <div class="money">
+      <div class="field"><span class="lbl">Copper</span><input type="number" class="play-edit" data-bind="money.cp"></div>
+      <div class="field"><span class="lbl">Silver</span><input type="number" class="play-edit" data-bind="money.sp"></div>
+      <div class="field"><span class="lbl">Gold</span><input type="number" class="play-edit" data-bind="money.gp"></div>
+    </div>
+    <div class="hint" style="margin-top:6px">10 cp = 1 sp · 10 sp = 1 gp.<span class="enc-only"> Coins: 100 count as 1 Enc.</span></div>
+  </div>
+</div>
+</section>
+
+<!-- ================= MAGIC ================= -->
+<section data-panel="magic" class="pv">
+<div class="grid">
+  <div class="panel span12" id="effortPanel">
+    <div class="panel-head"><h2>Effort</h2><span class="hint">Committed effort is the sum of the arts in use below. Use the adjust box for anything tracked by hand.</span></div>
+    <div id="pools" class="fx-list"></div>
+  </div>
+  <div class="panel span12" id="spellPanel">
+    <div class="panel-head"><h2>Spells</h2><span class="hint" data-out="spellNote"></span></div>
+    <div class="row" id="spellStats" style="margin-bottom:10px"></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th class="c" title="Prepared today">Prep</th><th>Spell</th><th class="c">Lvl</th><th>Tradition</th><th>Effect / notes</th><th></th></tr></thead>
+      <tbody id="spells"></tbody>
+    </table></div>
+    <div class="list-actions"><button data-action="addSpell">+ Add spell</button></div>
+  </div>
+  <div class="panel span12" id="artsPanel">
+    <div class="panel-head"><h2>Arts</h2><span class="hint">Press + each time you use an art; its cost stays committed until the scene or day ends, or until you release it with −. "End scene" and "Rest" in the header return the effort.</span></div>
+    <div id="artsGroups" class="fx-list" style="gap:18px"></div>
+  </div>
+</div>
+</section>
+
+<!-- ================= CHARACTER ================= -->
+<section data-panel="character" class="pv">
+<div class="grid">
+  <div class="panel span6">
+    <div class="panel-head"><h2>Identity</h2></div>
+    <div class="two">
+      <div class="field"><span class="lbl">Name</span><input data-bind="name" placeholder="Character name"></div>
+      <div class="field"><span class="lbl">Background</span><input data-bind="background" list="bgList" placeholder="e.g. Soldier"></div>
+      <div class="field"><span class="lbl">Homeland</span><input data-bind="homeland"></div>
+      <div class="field"><span class="lbl">Culture</span><input data-bind="culture"></div>
+      <div class="field"><span class="lbl">Species / origin</span><input data-bind="species" placeholder="Human"></div>
+      <div class="field"><span class="lbl">Languages</span><input data-bind="languages" placeholder="Trade tongue, …"></div>
+    </div>
+    <div class="field" style="margin-top:10px"><span class="lbl">Goal</span><input data-bind="goals" placeholder="Why you adventure"></div>
+    <div class="field" style="margin-top:10px"><span class="lbl">Appearance &amp; manner</span><textarea data-bind="appearance" rows="3"></textarea></div>
+  </div>
+
+  <div class="panel span6">
+    <div class="panel-head"><h2>Class &amp; level</h2></div>
+    <div class="two">
+      <div class="field"><span class="lbl">Class</span><select data-bind="classType"><option>Warrior</option><option>Expert</option><option>Mage</option><option>Adventurer</option></select></div>
+      <div class="field" id="traditionField"><span class="lbl">Tradition</span><select data-bind="tradition" id="traditionSel"></select></div>
+      <div class="field" id="partialAField"><span class="lbl">First partial class</span><select data-bind="partialA" id="partialASel"></select></div>
+      <div class="field" id="partialBField"><span class="lbl">Second partial class</span><select data-bind="partialB" id="partialBSel"></select></div>
+      <div class="field" id="vowedField"><span class="lbl">Vowed order skill</span><select data-bind="vowedSkill" id="vowedSel"></select></div>
+    </div>
+    <div class="three" style="margin-top:12px">
+      <div class="field"><span class="lbl">Level</span><input type="number" data-bind="level" min="1" max="10"></div>
+      <div class="field xp-only"><span class="lbl">Experience</span><input type="number" class="play-edit" data-bind="xp" min="0"></div>
+      <div class="field xp-only"><span class="lbl">XP track</span><select data-bind="xpTrack"><option value="fast">Fast</option><option value="slow">Slow</option></select></div>
+    </div>
+    <div class="xpbar xp-only"><div class="hint" data-out="xpNext"></div><div class="meter"><i data-meter="xp"></i></div></div>
+    <div class="three" style="margin-top:14px">
+      <div class="field"><span class="lbl">Max hit points</span><input type="number" data-bind="hp.max" min="1"></div>
+      <div class="field"><span class="lbl">Permanent strain</span><input type="number" data-bind="strain.perm" min="0"></div>
+      <div class="field"><span class="lbl">Other attack bonus</span><input type="number" data-bind="atkMisc"></div>
+    </div>
+    <div class="hint" style="margin-top:8px" data-out="hpNote"></div>
+    <div class="hint" style="margin-top:4px" data-out="atkNote"></div>
+  </div>
+
+  <div class="panel span6">
+    <div class="panel-head"><h2>Contacts &amp; allies</h2></div>
+    <textarea class="play-edit" data-bind="contacts" rows="5" placeholder="Name — who they are, what they owe you or you owe them"></textarea>
+  </div>
+  <div class="panel span6">
+    <div class="panel-head"><h2>Notes</h2><span class="hint">History, rumors, quests, anything else</span></div>
+    <textarea class="play-edit" data-bind="notes" rows="5"></textarea>
+  </div>
+</div>
+</section>
+
+<!-- ================= DATA ================= -->
+<section data-panel="data">
+<div class="grid">
+  <div class="panel span6">
+    <div class="panel-head"><h2>Characters</h2><span class="hint">Everything saves automatically in this browser.</span></div>
+    <div class="chars"><select id="charSel" aria-label="Switch character"></select><button data-action="newChar">New</button><button data-action="dupChar">Duplicate</button><button class="danger" data-action="delChar" id="delBtn">Delete</button></div>
+    <div class="hint" style="margin-top:10px">Browser storage can be cleared by the browser. Export a backup now and then, especially before a session on a new device.</div>
+    <div class="list-actions"><button class="primary" data-action="export">Download JSON backup</button><button data-action="copy">Copy JSON</button><button data-action="print">Print sheet</button></div>
+  </div>
+  <div class="panel span6 io">
+    <div class="panel-head"><h2>Import</h2><span class="hint">Paste a backup, or choose a file. Adds the character alongside the ones you have.</span></div>
+    <textarea id="importText" placeholder='{"name": …}'></textarea>
+    <div class="list-actions"><button data-action="importText">Import pasted JSON</button><label><input type="file" id="importFile" accept="application/json,.json" class="sr"><span><button type="button" data-action="pickFile">Choose file…</button></span></label></div>
+  </div>
+</div>
+</section>
+<!-- ================= SETTINGS ================= -->
+<section data-panel="settings">
+<div class="grid">
+  <div class="panel span6">
+    <div class="panel-head"><h2>Optional rules</h2><span class="hint">Applies to every character in this browser.</span></div>
+    <div class="field"><span class="lbl">Leveling</span><select id="levelingSel"><option value="xp">Experience points</option><option value="milestone">Milestone (the GM awards levels)</option></select></div>
+    <div class="hint" style="margin-top:8px">With milestone leveling the sheet hides experience points, the XP track and the progress bar. You still set Level on the Character tab.</div>
+    <label class="setting"><input type="checkbox" id="encChk"><span><b>Track encumbrance</b><br><span class="hint">Unchecked, the sheet hides Enc columns, readied limits and the encumbrance panel, and Move is always 30 ft.</span></span></label>
+  </div>
+</div>
+</section>
+</main>
+
+<datalist id="bgList"></datalist>
+<datalist id="weaponList"></datalist>
+<datalist id="focusList"></datalist>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+'use strict';
+/* ======================= Reference data (WWN SRD) ======================= */
+const ATTRS=['STR','DEX','CON','INT','WIS','CHA'];
+const ATTR_NAMES={STR:'Strength',DEX:'Dexterity',CON:'Constitution',INT:'Intelligence',WIS:'Wisdom',CHA:'Charisma'};
+const SKILLS=[['Administer','INT'],['Connect','CHA'],['Convince','CHA'],['Craft','INT'],['Exert','STR'],['Heal','INT'],['Know','INT'],['Lead','CHA'],['Magic','INT'],['Notice','WIS'],['Perform','CHA'],['Pray','WIS'],['Punch','STR'],['Ride','DEX'],['Sail','DEX'],['Shoot','DEX'],['Sneak','DEX'],['Stab','STR'],['Survive','WIS'],['Trade','CHA'],['Work','CON']];
+const COMBAT_SKILLS=['Stab','Shoot','Punch','Magic'];
+const BACKGROUNDS=['Artisan','Barbarian','Carter','Courtesan','Criminal','Hunter','Laborer','Merchant','Noble','Nomad','Peasant','Performer','Physician','Priest','Sailor','Scholar','Slave','Soldier','Thug','Wanderer'];
+const FOCI=['Alert','Armored Magic','Armsmaster','Artisan','Assassin','Authority','Close Combatant','Connected','Cultured Through','Deadeye','Dealmaker','Developed Attribute','Die Hard','Diplomatic Grace','Gifted Chirurgeon','Henchkeeper','Impervious Defense','Impostor','Lucky','Nullifier','Poisoner','Polymath','Rider','Shocking Assault','Sniper\'s Eye','Special Origin','Specialist','Spirit Familiar','Trapmaster','Unarmed Combatant','Unique Gift','Valiant Defender','Well Met','Whirlwind Assault','Xenoblooded'];
+const ARMORS=[{n:'None',ac:10,enc:0},{n:'War Shirt',ac:11,enc:0},{n:'Buff Coat',ac:12,enc:0},{n:'Linothorax',ac:13,enc:1},{n:'War Robe',ac:14,enc:3},{n:'Pieced Armor',ac:14,enc:2},{n:'Mail Shirt',ac:14,enc:1},{n:'Cuirass and Greaves',ac:15,enc:2},{n:'Scaled Armor',ac:16,enc:3},{n:'Mail Hauberk',ac:16,enc:2},{n:'Plate Armor',ac:17,enc:2},{n:'Great Armor',ac:19,enc:3},{n:'Grand Plate',ac:16,enc:3},{n:'Custom',ac:10,enc:0}];
+const SHIELDS=[{n:'None',ac:0,enc:0},{n:'Small Shield',ac:13,enc:1},{n:'Large Shield',ac:14,enc:1},{n:'Custom',ac:13,enc:1}];
+const WEAPONS=[
+ {n:'Axe, Hand',d:'1d6',s:'1/15',a:'STR',sk:'Stab',r:'10/30',t:'T',e:1},{n:'Axe, War',d:'1d10',s:'3/15',a:'STR',sk:'Stab',r:'',t:'2H',e:2},
+ {n:'Blackjack',d:'1d4',s:'',a:'STR',sk:'Stab',r:'',t:'S, LL',e:1},{n:'Bow, Large',d:'1d8',s:'',a:'DEX',sk:'Shoot',r:'100/600',t:'2H, R, PM',e:2},
+ {n:'Bow, Small',d:'1d6',s:'',a:'DEX',sk:'Shoot',r:'50/300',t:'2H, R, PM',e:1},{n:'Claw Blades',d:'1d6',s:'2/13',a:'STR',sk:'Stab',r:'',t:'S',e:1},
+ {n:'Club',d:'1d4',s:'',a:'STR',sk:'Stab',r:'10/30',t:'T, LL',e:1},{n:'Club, Great',d:'1d10',s:'2/15',a:'STR',sk:'Stab',r:'',t:'2H',e:2},
+ {n:'Crossbow',d:'1d10',s:'',a:'DEX',sk:'Shoot',r:'100/300',t:'2H, SR, PM',e:1},{n:'Dagger',d:'1d4',s:'1/15',a:'STR',sk:'Stab',r:'30/60',t:'S, T, PM',e:1},
+ {n:'Halberd',d:'1d10',s:'2/15',a:'STR',sk:'Stab',r:'',t:'2H, L',e:2},{n:'Hammer, Great',d:'1d10',s:'2/18',a:'STR',sk:'Stab',r:'',t:'2H',e:2},
+ {n:'Hammer, War',d:'1d8',s:'1/18',a:'STR',sk:'Stab',r:'',t:'',e:1},{n:'Hurlant, Hand',d:'1d12',s:'',a:'DEX',sk:'Shoot',r:'30/60',t:'SS, AP',e:1},
+ {n:'Hurlant, Long',d:'2d8',s:'',a:'DEX',sk:'Shoot',r:'200/600',t:'2H, SS, AP, PM',e:2},{n:'Mace',d:'1d6',s:'1/18',a:'STR',sk:'Stab',r:'',t:'LL',e:1},
+ {n:'Pike',d:'1d8',s:'1/18',a:'STR',sk:'Stab',r:'',t:'2H, L',e:2},{n:'Shield Bash, Large',d:'1d6',s:'1/13',a:'STR',sk:'Stab',r:'',t:'LL',e:0},
+ {n:'Shield Bash, Small',d:'1d4',s:'',a:'STR',sk:'Stab',r:'',t:'LL',e:0},{n:'Spear, Heavy',d:'1d10',s:'2/15',a:'STR',sk:'Stab',r:'',t:'2H',e:2},
+ {n:'Spear, Light',d:'1d6',s:'2/13',a:'STR',sk:'Stab',r:'30/60',t:'T',e:1},{n:'Staff',d:'1d6',s:'1/13',a:'STR',sk:'Stab',r:'',t:'2H, LL',e:1},
+ {n:'Stiletto',d:'1d4',s:'1/18',a:'DEX',sk:'Stab',r:'',t:'S, PM',e:1},{n:'Sword, Great',d:'1d12',s:'2/15',a:'STR',sk:'Stab',r:'',t:'2H',e:2},
+ {n:'Sword, Long',d:'1d8',s:'2/13',a:'STR',sk:'Stab',r:'',t:'',e:1},{n:'Sword, Short',d:'1d6',s:'2/15',a:'STR',sk:'Stab',r:'',t:'',e:1},
+ {n:'Throwing Blade',d:'1d4',s:'',a:'DEX',sk:'Shoot',r:'30/60',t:'S, T, N',e:1},{n:'Unarmed Attack',d:'1d2',s:'',a:'STR',sk:'Punch',r:'',t:'LL',e:0}
+];
+const XP_TABLE={fast:[0,3,6,12,18,27,39,54,72,93],slow:[0,6,15,24,36,51,69,87,105,139]};
+const ATK_PARTIAL_WARRIOR=[1,2,2,3,4,5,5,6,6,7], ATK_OTHER=[0,1,1,2,2,3,3,4,4,5];
+const SPELL_TABLE={
+ full:[[1,1,3],[1,1,3],[2,2,4],[2,2,5],[3,3,6],[3,3,7],[4,4,8],[4,4,9],[5,5,10],[5,6,12]],
+ partial:[[1,1,2],[1,1,3],[1,1,3],[1,2,4],[2,2,5],[2,3,6],[2,3,7],[2,3,7],[3,4,8],[3,4,9]],
+ dual:[[1,1,3],[1,1,4],[1,2,5],[2,2,6],[2,2,8],[2,3,9],[3,3,10],[3,4,12],[3,4,13],[4,5,15]]
+};
+const INVOKER={full:{maxLvl:[1,1,2,2,3,3,4,4,5,5],pts:[2,3,4,5,6,7,8,9,10,11],prep:[2,3,4,4,5,6,7,7,8,9]},partial:{maxLvl:[1,1,1,1,2,2,2,2,3,3],pts:[1,1,2,2,3,3,4,4,5,6],prep:[2,3,3,4,4,5,5,6,6,7]}};
+const TRADITIONS=['High Mage','Elementalist','Necromancer','Invoker'];
+/* Partial class metadata. atk: 'warrior' uses the Partial Warrior column, otherwise the standard column.
+   effort: base + skill + best of attrs; 'partialMinus' drops one point for partial casters. */
+const PARTIALS={
+ 'Warrior':{atk:'warrior',hp2:true,combatFocus:true},
+ 'Expert':{quick:true,expertFocus:true},
+ 'High Mage':{spells:'partial',effort:{base:1,skill:'Magic',attrs:['INT','CHA'],partialMinus:true}},
+ 'Elementalist':{spells:'partial',effort:{base:1,skill:'Magic',attrs:['INT','CHA'],partialMinus:true}},
+ 'Necromancer':{spells:'partial',effort:{base:1,skill:'Magic',attrs:['INT','CHA'],partialMinus:true}},
+ 'Invoker':{spells:'invoker',effort:{base:0,skill:'Magic',attrs:[]}},
+ 'Healer':{effort:{base:0,skill:'Heal',attrs:['INT','CHA']}},
+ 'Vowed':{effort:{base:0,skill:'vowed',attrs:'best'},vowed:true},
+ 'Bard':{effort:{base:0,skill:'Perform',attrs:['CHA']}},
+ 'Thought Noble':{effort:{base:0,skill:'Notice',attrs:['INT','WIS']}},
+ 'Accursed':{effort:{base:0,skill:'Magic',attrs:['INT','CHA']}},
+ 'Mageslayer':{atk:'warrior',effort:{base:0,skill:'Magic',attrs:['INT','CON']}},
+ 'Duelist':{atk:'warrior',effort:{base:0,skill:'Stab',attrs:['DEX','INT']}},
+ 'Beastmaster':{effort:{base:0,skill:'Survive',attrs:['WIS','CHA']}},
+ 'Blood Priest':{effort:{base:0,skill:'Pray',attrs:['WIS','CHA']}},
+ 'Skinshifter':{effort:{base:0,skill:'Survive',attrs:['CON','CHA']}},
+ 'Wise':{}
+};
+const PARTIAL_NAMES=Object.keys(PARTIALS);
+const COMMITS=['Scene','Day','Indefinite'];
+const ALL_SKILLS=SKILLS.map(x=>x[0]);
+const VOWED_DMG=['1d6','1d6','1d8','1d8','1d10','1d10','1d10+1','1d10+1','1d10+2','1d10+3'];
+/* Class attacks and frequently used actions. kind 'action' rows have no roll.
+   scale: 'vowed' = die by level; 'natural' = +1 dmg/Shock at levels 3/6/9; 'level' = add level to damage; 'magic' = add Magic skill to damage. */
+const ACTIONS=[
+ {n:'Vowed strike',kind:'attack',sk:'Punch',a:'STR',d:'Vowed',s:'2/15',t:'Vowed; scales with level',scale:'vowed'},
+ {n:'Accursed Blade',kind:'attack',sk:'Magic',a:'INT',d:'1d8',s:'2/15',t:'Accursed; +Magic to dmg',scale:'magic'},
+ {n:'Accursed Bolt',kind:'attack',sk:'Magic',a:'INT',d:'1d8',s:'',r:'200',t:'Accursed; 2H, −4 in melee, +Magic to dmg',scale:'magic'},
+ {n:'Elemental Blast',kind:'attack',sk:'Magic',a:'INT',d:'1d6',s:'',r:'50 ft/level',t:'Elementalist',scale:'level'},
+ {n:'Savage Talons',kind:'attack',sk:'Punch',a:'STR',d:'1d8',s:'2/13',t:'Skinshifter; form bonus replaces attack bonus',scale:'natural'},
+ {n:'Natural Weaponry',kind:'attack',sk:'Punch',a:'STR',d:'1d8',s:'2/13',t:'Beastmaster; +1 at levels 3/6/9',scale:'natural'},
+ {n:'Spell attack',kind:'attack',sk:'Magic',a:'INT',d:'per spell',t:''},
+ {n:'Healing Touch',kind:'action',sk:'Heal',a:'INT',d:'2d6',t:'Healer; touch; +1 strain',scale:'heal'},
+ {n:'Merciful Healing',kind:'action',sk:'Pray',a:'WIS',d:'Merciful',t:'Blood Priest; touch; +1 strain in combat',scale:'merciful'},
+ {n:'Smite the Wicked',kind:'action',sk:'Pray',a:'WIS',d:'weapon dmg, roll twice',t:'Blood Priest; +4 to hit; On Turn; 1/scene per target',scale:'level'},
+ {n:'Wrath of the Most High',kind:'action',sk:'Pray',a:'WIS',d:'1d8',t:'Blood Priest; extra dmg on first hit by end of next round',scale:'level'},
+ {n:'Stunning Shock',kind:'action',sk:'Magic',a:'INT',d:'Loses next Main Action (Physical save: Move instead)',r:'50 ft/level',t:'Elementalist; 1/scene; metal or wet target'},
+ {n:'Petrifying Stare',kind:'action',sk:'Magic',a:'INT',d:'Physical save or lose Move for half level rounds',t:'Elementalist'}
+];
+const NATURAL_BONUS=[0,0,1,1,1,2,2,2,3,3];
+const MERCIFUL=L=>L>=8?'4d6+8':L>=4?'2d6+4':'1d6+2';
+
+/* ======================= Helpers ======================= */
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sgn=n=>(n>=0?'+':'−')+Math.abs(n);
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const uid=()=>Math.random().toString(36).slice(2,10);
+function baseMod(score){score=+score||0;return score<=3?-2:score<=7?-1:score<=13?0:score<=17?1:2;}
+function getPath(o,p){return p.split('.').reduce((a,k)=>a==null?undefined:a[k],o);}
+function setPath(o,p,v){const ks=p.split('.');let cur=o;for(let i=0;i<ks.length-1;i++){if(cur[ks[i]]==null)cur[ks[i]]={};cur=cur[ks[i]];}cur[ks[ks.length-1]]=v;}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),1800);}
+function opts(list,sel){return list.map(v=>`<option value="${esc(v)}"${v===sel?' selected':''}>${esc(v)}</option>`).join('');}
+
+/* ======================= Character model ======================= */
+function newCharacter(){
+  const skills={},skillAttr={};SKILLS.forEach(([n,a])=>{skills[n]=-1;skillAttr[n]=a;});
+  return {id:uid(),name:'',background:'',homeland:'',culture:'',species:'Human',languages:'',goals:'',appearance:'',contacts:'',notes:'',conditions:'',
+    classType:'Warrior',tradition:'High Mage',partialA:'Warrior',partialB:'Expert',vowedSkill:'Exert',
+    level:1,xp:0,xpTrack:'fast',
+    attrs:{STR:10,DEX:10,CON:10,INT:10,WIS:10,CHA:10},attrAdj:{STR:0,DEX:0,CON:0,INT:0,WIS:0,CHA:0},
+    hp:{cur:1,max:1},strain:{cur:0,perm:0},
+    skills,skillAttr,skillNotes:{},skillPoints:0,
+    foci:[],weapons:[],armor:{name:'None',ac:10,enc:0,worn:true},shield:{name:'None',ac:0,enc:0,worn:false},acMisc:0,atkMisc:0,
+    items:[],money:{cp:0,sp:0,gp:0},
+    spells:[],castsUsed:0,arts:[],effortAdj:{},effortAttr:{},effortSkill:{},isExample:false};
+}
+function sampleCharacter(){
+  const c=newCharacter();
+  Object.assign(c,{name:'Teodora Vael',background:'Soldier',homeland:'The Gyre Marches',culture:'Marcher',species:'Human',languages:'Trade tongue, Old Ancalian',
+    goals:'Find out who sold her company out at Kettle Ford',appearance:'Weathered, close-cropped hair, a burn scar down one forearm she never explains.',
+    contacts:'Brother Aldous — priest at the Deep Shrine, patched her up once and expects a favor.\nMarrow — fence in Kettle Ford, buys anything that doesn\'t bleed.',
+    notes:'Kettle Ford ambush: 3 survivors of 40. The quartermaster\'s ledger went missing the same night.',conditions:'',
+    classType:'Adventurer',partialA:'Warrior',partialB:'High Mage',level:3,xp:7,xpTrack:'fast',
+    attrs:{STR:14,DEX:12,CON:13,INT:15,WIS:9,CHA:8},hp:{cur:15,max:19},strain:{cur:1,perm:0},skillPoints:1,isExample:true});
+  Object.assign(c.skills,{Stab:1,Magic:1,Notice:0,Exert:0,Know:0,Survive:0,Lead:0});
+  c.foci=[{name:'Armsmaster',level:1,notes:'Ready melee weapons as an Instant action; add Stab to melee damage.'},{name:'Die Hard',level:1,notes:'+2 max HP per level; stabilize automatically when mortally wounded.'}];
+  c.weapons=[{name:'Sword, Long',skill:'Stab',attr:'STR',dmg:'1d8',shock:'2/13',range:'',traits:'',enc:1,readied:true,bonus:0},{name:'Dagger',skill:'Stab',attr:'STR',dmg:'1d4',shock:'1/15',range:'30/60',traits:'S, T, PM',enc:1,readied:true,bonus:0},{name:'Bow, Small',skill:'Shoot',attr:'DEX',dmg:'1d6',shock:'',range:'50/300',traits:'2H, R, PM',enc:1,readied:false,bonus:0}];
+  c.armor={name:'Buff Coat',ac:12,enc:0,worn:true};c.shield={name:'None',ac:0,enc:0,worn:false};
+  c.items=[{name:'Healer\'s kit',qty:1,enc:1,loc:'readied',notes:'6 uses left'},{name:'Torches',qty:6,enc:0.34,loc:'stowed',notes:'3 per Enc'},{name:'Rations, 1 week',qty:1,enc:1,loc:'stowed',notes:''},{name:'Rope, 50 ft',qty:1,enc:1,loc:'stowed',notes:''},{name:'Backpack & bedroll',qty:1,enc:1,loc:'stowed',notes:''},{name:'Grimoire',qty:1,enc:1,loc:'stowed',notes:'4 spells inscribed'},{name:'Spare boots, winter cloak',qty:1,enc:2,loc:'other',notes:'Left at the Kettle Ford inn'}];
+  c.money={cp:14,sp:63,gp:2};
+  c.spells=[{name:'Flare of Fury',level:1,tradition:'High Magic',prepared:true,desc:'Bolt of arcane force; 1d10 dmg at level 1–4, Evasion save for half.'},{name:'Coruscating Coffin',level:1,tradition:'High Magic',prepared:false,desc:'Trap one creature in a shining cage for the scene; Mental save resists.'},{name:'Immolation of the Unspoken Name',level:1,tradition:'High Magic',prepared:true,desc:'Ward against one named foe.'},{name:'Velocity Denial',level:1,tradition:'High Magic',prepared:false,desc:'Halves movement of everything in range.'}];
+  c.castsUsed=0;
+  c.arts=[{name:'Weapon of Sorcerous Dread',pool:'High Mage',cost:1,commit:'Scene',uses:1,desc:'A weapon you hold gains +1 hit and damage for the scene.'},{name:'Sorcerous Ken',pool:'High Mage',cost:1,commit:'Scene',uses:0,desc:'Sense active magic and enchanted items within 100 feet.'}];
+  return c;
+}
+/* Migrate any missing fields on characters saved by older versions */
+function normalize(c){const d=newCharacter();for(const k in d){if(c[k]==null)c[k]=d[k];}for(const k of ATTRS){if(c.attrs[k]==null)c.attrs[k]=10;if(c.attrAdj[k]==null)c.attrAdj[k]=0;}SKILLS.forEach(([n,a])=>{if(c.skills[n]==null)c.skills[n]=-1;if(!c.skillAttr[n])c.skillAttr[n]=a;});(c.arts||[]).forEach(a=>{if(a.uses==null)a.uses=a.active?1:0;delete a.active;if(a.commit==='Instant'||!COMMITS.includes(a.commit))a.commit='Scene';});(c.weapons||[]).forEach(w=>{if(!w.kind)w.kind='attack';if(w.kind==='action'){w.enc=0;w.readied=false;}if(w.kind==='check')w.kind='action';if(w.scale==null){w.scale=/^accursed/i.test(w.name||'')?'magic':/^vowed$/i.test((w.dmg||'').trim())?'vowed':'';}});return c;}
+
+/* ======================= Storage ======================= */
+const KEY='wwn-ledger-v1';
+let db={characters:{},current:null,tab:'play',mode:'play',settings:{leveling:'xp',encumbrance:true}};
+function loadDb(){try{const raw=localStorage.getItem(KEY);if(raw){db=JSON.parse(raw);}}catch(e){}
+  if(!db.characters)db.characters={};
+  if(!db.settings)db.settings={leveling:'xp'};
+  if(db.settings.encumbrance==null)db.settings.encumbrance=true;
+  for(const id in db.characters)normalize(db.characters[id]);
+  if(!db.current||!db.characters[db.current]){const ids=Object.keys(db.characters);if(ids.length){db.current=ids[0];}else{const s=sampleCharacter();db.characters[s.id]=s;db.current=s.id;}}
+}
+let saveTimer=null;
+function save(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(db));}catch(e){toast('Could not save: browser storage unavailable');}},150);}
+let C=null; // current character
+
+/* ======================= Derived values ======================= */
+function mod(k){return baseMod(C.attrs[k])+(+C.attrAdj[k]||0);}
+function bestMod(keys){return Math.max(...keys.map(mod));}
+function skillLvl(n){return +C.skills[n];}
+function hasFocus(name){return C.foci.some(f=>(f.name||'').trim().toLowerCase()===name.toLowerCase());}
+function partials(){return C.classType==='Adventurer'?[C.partialA,C.partialB]:[];}
+function isFullWarrior(){return C.classType==='Warrior';}
+function isPartialWarriorAtk(){return partials().some(p=>PARTIALS[p]&&PARTIALS[p].atk==='warrior');}
+function hpBonus2(){if(isFullWarrior())return true;const ps=partials();return ps.includes('Warrior')&&!ps.includes('Duelist');}
+function level(){return clamp(+C.level||1,1,10);}
+function attackBonus(){const L=level();if(isFullWarrior())return L;if(isPartialWarriorAtk())return ATK_PARTIAL_WARRIOR[L-1];return ATK_OTHER[L-1];}
+function killingBlow(){return isFullWarrior()?Math.ceil(level()/2):0;}
+function classLine(){if(C.classType==='Mage')return C.tradition+(C.tradition==='Invoker'?'':' (Mage)');if(C.classType==='Adventurer')return `${C.partialA} / ${C.partialB}`;return C.classType;}
+function unarmoredBase(){let b=10;if(partials().includes('Vowed'))b=Math.max(b,13+Math.floor(level()/2));if(hasFocus('Impervious Defense'))b=Math.max(b,15+Math.ceil(level()/2));return b;}
+function armorClass(){
+  const armored=C.armor.worn&&C.armor.name!=='None';let base=armored?(+C.armor.ac||10):unarmoredBase();let note=armored?C.armor.name:(base>10?'unarmored (class/focus base '+base+')':'unarmored');
+  if(C.shield.worn&&C.shield.name!=='None'){const s=+C.shield.ac||0;if(s>base){base=s;note=C.shield.name;}else{base+=1;note+=' + shield';}}
+  return {ac:base+mod('DEX')+(+C.acMisc||0),note:note+', Dex '+sgn(mod('DEX'))+((+C.acMisc)?', other '+sgn(+C.acMisc):'')};
+}
+function effortPools(){
+  const pools=[];
+  function poolFor(name,partial){const cfg=PARTIALS[name]&&PARTIALS[name].effort;if(!cfg)return;
+    const defSkill=cfg.skill==='vowed'?(C.vowedSkill||'Exert'):cfg.skill;
+    const skillName=(C.effortSkill||{})[name]||defSkill;const sk=Math.max(0,skillLvl(skillName));
+    const ov=(C.effortAttr||{})[name]||'';
+    let best=0,attrLabel='';
+    if(ov){best=mod(ov);attrLabel=ov+' (house rule)';}
+    else if(cfg.attrs==='best'){best=bestMod(ATTRS);attrLabel='best attribute';}
+    else if(cfg.attrs.length){best=bestMod(cfg.attrs);attrLabel='best of '+cfg.attrs.join('/');}
+    let max=cfg.base+sk+best;let f=(cfg.base?cfg.base+' + ':'')+skillName+' '+sk+(attrLabel?' + '+attrLabel+' '+sgn(best):'');
+    if(partial&&cfg.partialMinus){max-=1;f+=' − 1 (partial)';}
+    max=Math.max(1,max);
+    const committed=C.arts.filter(a=>a.pool===name).reduce((s,a)=>s+(+a.uses||0)*(+a.cost||0),0)+(+(C.effortAdj[name]||0));
+    const defAttrLabel=cfg.attrs==='best'?'best attribute':cfg.attrs.length?'best of '+cfg.attrs.join('/'):'none';
+    pools.push({key:name,label:name,max,committed,free:max-committed,formula:f+' (min 1)',defSkill,defAttrLabel,hasAttr:cfg.attrs==='best'||cfg.attrs.length>0});
+  }
+  if(C.classType==='Mage')poolFor(C.tradition,false);
+  if(C.classType==='Adventurer'){partials().forEach(p=>poolFor(p,true));}
+  return pools;
+}
+function spellMode(){
+  if(C.classType==='Mage')return C.tradition==='Invoker'?{mode:'invoker',table:'full',label:'Full Invoker'}:{mode:'spells',table:'full',label:'Full '+C.tradition};
+  if(C.classType!=='Adventurer')return null;
+  const casters=partials().filter(p=>PARTIALS[p]&&PARTIALS[p].spells);
+  if(!casters.length)return null;
+  if(casters.length===2){if(casters.includes('Invoker'))return {mode:'invoker',table:'partial',label:'Partial Invoker (Invokers cannot pair with other spellcasters)'};return {mode:'spells',table:'dual',label:'Dual partial casters: '+casters.join(' + ')};}
+  if(casters[0]==='Invoker')return {mode:'invoker',table:'partial',label:'Partial Invoker'};
+  return {mode:'spells',table:'partial',label:'Partial '+casters[0]};
+}
+function encumbrance(){
+  let r=0,s=0;
+  C.items.forEach(i=>{const e=(+i.enc||0)*(+i.qty||0);if(i.loc==='readied')r+=e;else if(i.loc==='stowed')s+=e;});
+  C.weapons.forEach(w=>{if(w.readied)r+=(+w.enc||0);});
+  if(C.armor.worn&&C.armor.name!=='None')r+=(+C.armor.enc||0);
+  if(C.shield.worn&&C.shield.name!=='None')r+=(+C.shield.enc||0);
+  const str=+C.attrs.STR||0,rl=Math.floor(str/2),sl=str;
+  const ro=Math.max(0,r-rl),so=Math.max(0,s-sl);
+  let status='Unencumbered',move=30,cls='good';
+  if(ro||so){if(ro<=2&&so<=4){status='Lightly encumbered';move=20;cls='warn';}else if(ro<=4&&so<=8){status='Heavily encumbered';move=10;cls='crit';}else{status='Overloaded';move=0;cls='crit';}}
+  return {r:Math.round(r*100)/100,s:Math.round(s*100)/100,rl,sl,status,move,cls};
+}
+function xpInfo(){const L=level(),t=XP_TABLE[C.xpTrack]||XP_TABLE.fast;if(L>=10)return {text:'Level 10 — maximum level',pct:100};const need=t[L],prev=t[L-1],xp=+C.xp||0;return {text:`${xp} / ${need} XP to level ${L+1} (${Math.max(0,need-xp)} more)`,pct:clamp(Math.round((xp-prev)/(need-prev)*100),0,100),need};}
+function fociPicks(){const L=level();let n=1+(L>=2)+(L>=5)+(L>=7)+(L>=10);const parts=[];if(isFullWarrior()||partials().includes('Warrior')){n+=1;parts.push('combat focus (Warrior)');}if(C.classType==='Expert'||partials().includes('Expert')){n+=1;parts.push('non-combat focus (Expert)');}return {n,parts};}
+function features(){
+  const L=level(),out=[];
+  if(isFullWarrior()){out.push(`<b>Killing Blow.</b> Add +${killingBlow()} (half level, rounded up) to all damage and Shock you inflict.`);out.push(`<b>Veteran's Luck.</b> Once per scene, as an Instant action, turn your missed attack into a hit or an enemy's hit into a miss.`);}
+  if(C.classType==='Expert'){out.push(`<b>Masterful Expertise.</b> Once per scene, reroll a failed non-combat skill check as an Instant action.`);out.push(`<b>Quick Learner.</b> +1 skill point per level for non-combat skills or attributes (4 per level total).`);}
+  if(C.classType==='Mage'){out.push(`<b>Arcane Tradition: ${esc(C.tradition)}.</b> Full caster. ${C.tradition==='Invoker'?'Spell points instead of daily castings; no arts.':'Cannot cast in armor or with a shield unless you have Armored Magic.'}`);}
+  partials().forEach(p=>{switch(p){
+    case 'Warrior':out.push(`<b>Partial Warrior.</b> +2 HP per level and the better attack progression. No Killing Blow or Veteran's Luck.`);break;
+    case 'Expert':out.push(`<b>Partial Expert.</b> Quick Learner: +1 skill point per level for non-combat skills or attributes. No Masterful Expertise.`);break;
+    case 'High Mage':case 'Elementalist':case 'Necromancer':out.push(`<b>Partial ${p}.</b> Casts from the partial spell table; Effort is one lower than a full mage. No casting in armor or with a shield.`);break;
+    case 'Invoker':out.push(`<b>Partial Invoker.</b> Spell points equal to the partial table + Int. Effort equals Magic skill.`);break;
+    case 'Healer':out.push(`<b>Healer.</b> Heal as a bonus skill; arts driven by Heal-based Effort.`);break;
+    case 'Vowed':out.push(`<b>Vowed.</b> Unarmed strikes scale with level; unarmored base AC ${13+Math.floor(L/2)} (13 + half level). Arts fail in armor or with a shield.`);break;
+    case 'Bard':out.push(`<b>Bard.</b> A Thousand Tongues; arts work in armor and are not magical.`);break;
+    case 'Thought Noble':out.push(`<b>Thought Noble.</b> Notice as a bonus skill; targets resist with Mental saves.`);break;
+    case 'Accursed':out.push(`<b>Accursed.</b> Accursed Blade or Bolt attacks with Magic as the skill and add Magic to damage; arts work in armor.`);break;
+    case 'Mageslayer':out.push(`<b>Mageslayer.</b> Warrior attack progression; Magic-0 for understanding only; no bonus combat focus.`);break;
+    case 'Duelist':out.push(`<b>Duelist.</b> Favored weapon bonus +${L}; arts need light armor and no large shield.`);break;
+    case 'Beastmaster':out.push(`<b>Beastmaster.</b> Bound companion of up to ${L+1} HD.`);break;
+    case 'Blood Priest':out.push(`<b>Blood Priest.</b> Miracles fueled by Pray-based Effort; usable in armor.`);break;
+    case 'Skinshifter':out.push(`<b>Skinshifter.</b> Form bonus +${[1,1,2,2,3,3,4,4,5,6][L-1]}; one mastered form per level.`);break;
+    case 'Wise':out.push(`<b>Wise.</b> One bonus skill at level 0; arts are always on or limited per day. No Effort.`);break;
+  }});
+  if(hasFocus('Die Hard'))out.push(`<b>Die Hard.</b> +2 max HP per level; auto-stabilize when mortally wounded.`);
+  if(hasFocus('Alert'))out.push(`<b>Alert.</b> Cannot be surprised; +1 initiative.`);
+  return out;
+}
+
+/* ======================= Rendering ======================= */
+function bind(root){
+  root.querySelectorAll('[data-bind]').forEach(el=>{
+    if(el._bound)return;el._bound=true;
+    const path=el.dataset.bind;
+    const isNum=el.type==='number', isChk=el.type==='checkbox';
+    const load=()=>{const v=getPath(C,path);if(isChk)el.checked=!!v;else el.value=v==null?'':v;};
+    el._load=load;load();
+    el.addEventListener(isChk||el.tagName==='SELECT'?'change':'input',()=>{
+      let v=isChk?el.checked:el.value;if(isNum)v=el.value===''?0:+el.value;
+      setPath(C,path,v);save();onChange(path,el);
+    });
+  });
+}
+function reload(root){(root||document).querySelectorAll('[data-bind]').forEach(el=>el._load&&el._load());}
+function onChange(path,el){
+  if(path==='armor.name'){const a=ARMORS.find(x=>x.n===C.armor.name);if(a&&a.n!=='Custom'){C.armor.ac=a.ac;C.armor.enc=a.enc;C.armor.worn=a.n!=='None';reload($('#armorSel').closest('.panel'));}}
+  if(path==='shield.name'){const s=SHIELDS.find(x=>x.n===C.shield.name);if(s&&s.n!=='Custom'){C.shield.ac=s.ac;C.shield.enc=s.enc;C.shield.worn=s.n!=='None';reload($('#shieldSel').closest('.panel'));}}
+  if(/^weapons\.\d+\.name$/.test(path)){const i=+path.split('.')[1],nm=(C.weapons[i].name||'').trim().toLowerCase(),w=WEAPONS.find(x=>x.n.toLowerCase()===nm),a=ACTIONS.find(x=>x.n.toLowerCase()===nm);
+    if(w){Object.assign(C.weapons[i],{kind:'attack',dmg:w.d,shock:w.s,attr:w.a,skill:w.sk,range:w.r,traits:w.t,enc:w.e,readied:true,scale:''});reload(el.closest('tr'));}
+    else if(a){Object.assign(C.weapons[i],{kind:a.kind,dmg:a.d||'',shock:a.s||'',attr:a.a,skill:a.sk,range:a.r||'',traits:a.t||'',enc:0,readied:false,scale:a.scale||''});reload(el.closest('tr'));}}
+  if(path==='classType'||path==='tradition'||path==='partialA'||path==='partialB'){renderArts();}
+  if(path==='name')C.isExample=false;
+  if(path==='level')C.level=clamp(+C.level||1,1,10);
+  recalc();
+}
+function renderAttrs(){
+  $('#attrs').innerHTML=ATTRS.map(k=>`<div class="attr"><span class="lbl" title="${ATTR_NAMES[k]}">${k}</span><input type="number" class="score" data-bind="attrs.${k}" min="1" max="20" aria-label="${ATTR_NAMES[k]} score"><span class="mod" data-out="mod${k}">+0</span><span class="adj edit-only" title="Extra modifier from Developed Attribute or similar">adj <input type="number" data-bind="attrAdj.${k}"></span></div>`).join('');
+  bind($('#attrs'));
+}
+function renderSkills(){
+  $('#skills').innerHTML=SKILLS.map(([n])=>`<tr data-skill="${n}"><td><b>${n}</b></td><td class="c"><select data-bind="skills.${n}" style="width:76px">${[-1,0,1,2,3,4].map(v=>`<option value="${v}">${v<0?'—':v}</option>`).join('')}</select></td><td><select data-bind="skillAttr.${n}" style="width:80px">${opts(ATTRS)}</select></td><td class="calc" data-out="sk${n}"></td><td><input data-bind="skillNotes.${n}" placeholder=""></td></tr>`).join('');
+  bind($('#skills'));
+}
+function renderWeapons(){
+  $('#weapons').innerHTML=C.weapons.map((w,i)=>`<tr>
+    <td class="w-name"><input data-bind="weapons.${i}.name" list="weaponList" placeholder="Weapon or action" title="Type or pick a weapon or class action"></td>
+    <td><select data-bind="weapons.${i}.skill" class="w-sel">${opts(ALL_SKILLS)}</select></td>
+    <td><select data-bind="weapons.${i}.attr" style="width:72px">${opts(ATTRS)}</select></td>
+    <td class="calc" data-out="wHit${i}"></td>
+    <td><div class="row" style="flex-wrap:nowrap;gap:4px"><input data-bind="weapons.${i}.dmg" style="min-width:64px" placeholder="1d6"><span class="calc small" data-out="wDmg${i}"></span></div></td>
+    <td><div class="row" style="flex-wrap:nowrap;gap:4px"><input data-bind="weapons.${i}.shock" class="w-xs" placeholder="—" title="Shock damage / max AC affected"><span class="calc small" data-out="wShock${i}"></span></div></td>
+    <td><input data-bind="weapons.${i}.range" class="w-s" placeholder="—"></td>
+    <td><input data-bind="weapons.${i}.traits" class="w-s" placeholder="—"></td>
+    <td class="c enc-only"><input type="number" data-bind="weapons.${i}.enc" step="0.5" style="width:52px"></td>
+    <td class="c enc-only"><input type="checkbox" data-bind="weapons.${i}.readied"></td>
+    <td class="c"><input type="number" class="play-edit" data-bind="weapons.${i}.bonus" style="width:48px"></td>
+    <td><button class="rm" data-remove="weapons:${i}" title="Remove this row">Remove</button></td></tr>`).join('')||`<tr><td colspan="12" class="hint">Nothing here yet. Add a row, then pick a weapon or class action from the name box to fill in its numbers.</td></tr>`;
+  bind($('#weapons'));
+}
+function renderFoci(){
+  $('#foci').innerHTML=C.foci.map((f,i)=>`<div class="fx"><input data-bind="foci.${i}.name" list="focusList" placeholder="Focus name"><select data-bind="foci.${i}.level"><option value="1">Lvl 1</option><option value="2">Lvl 2</option></select><button class="ghost" data-remove="foci:${i}" title="Remove">✕</button><textarea data-bind="foci.${i}.notes" rows="1" placeholder="What it does for you"></textarea></div>`).join('')||`<div class="hint">No foci yet.</div>`;
+  bind($('#foci'));
+}
+function renderItems(){
+  $('#items').innerHTML=C.items.map((it,i)=>`<tr><td class="w-name"><input data-bind="items.${i}.name" placeholder="Item"></td><td class="c"><input type="number" class="play-edit" data-bind="items.${i}.qty" style="width:56px" min="0"></td><td class="c enc-only"><input type="number" data-bind="items.${i}.enc" step="0.01" style="width:64px" min="0"></td><td class="enc-only"><select data-bind="items.${i}.loc" style="width:110px"><option value="readied">Readied</option><option value="stowed">Stowed</option><option value="other">Elsewhere</option></select></td><td><input data-bind="items.${i}.notes" placeholder=""></td><td><button class="ghost" data-remove="items:${i}" title="Remove">✕</button></td></tr>`).join('')||`<tr><td colspan="6" class="hint">Nothing carried yet.</td></tr>`;
+  bind($('#items'));
+}
+function renderSpells(){
+  $('#spells').innerHTML=C.spells.map((s,i)=>`<tr><td class="c"><input type="checkbox" class="play-edit" data-bind="spells.${i}.prepared"></td><td class="w-name"><input data-bind="spells.${i}.name" placeholder="Spell"></td><td class="c"><input type="number" data-bind="spells.${i}.level" min="1" max="5" style="width:52px"></td><td><input data-bind="spells.${i}.tradition" class="w-m" placeholder="High Magic"></td><td><input data-bind="spells.${i}.desc" placeholder="Short reminder of the effect"></td><td><button class="ghost" data-remove="spells:${i}" title="Remove">✕</button></td></tr>`).join('')||`<tr><td colspan="6" class="hint">No spells known yet.</td></tr>`;
+  bind($('#spells'));
+}
+function renderArts(){
+  const pools=effortPools();const keys=pools.length?pools.map(p=>p.key):['—'];
+  const others=C.arts.map((a,i)=>[a,i]).filter(([a])=>!keys.includes(a.pool));
+  const groups=keys.map(k=>({key:k,title:k==='—'?'Arts':k+' arts',rows:C.arts.map((a,i)=>[a,i]).filter(([a])=>a.pool===k)}));
+  if(others.length)groups.push({key:'—',title:'Other arts',rows:others});
+  const row=(a,i)=>`<tr><td class="w-name"><input data-bind="arts.${i}.name" placeholder="Art"></td><td class="c"><input type="number" data-bind="arts.${i}.cost" min="0" style="width:52px"></td><td><select data-bind="arts.${i}.commit" style="width:110px">${opts(COMMITS)}</select></td><td class="c"><div class="tracker" style="justify-content:center"><button class="step" data-action="artFree:${i}" title="Release one commitment" aria-label="Release">−</button><b class="num" style="min-width:1.4em;text-align:center" data-out="artUses${i}">${+a.uses||0}</b><button class="step" data-action="artUse:${i}" title="Use: commit effort" aria-label="Use">+</button></div></td><td><input data-bind="arts.${i}.desc" placeholder="Effect"></td><td><button class="rm" data-remove="arts:${i}">Remove</button></td></tr>`;
+  $('#artsGroups').innerHTML=groups.map(g=>`<div class="art-group"><h3>${esc(g.title)}</h3><div class="tbl-wrap"><table><thead><tr><th>Art</th><th class="c">Cost</th><th>Committed for</th><th class="c" title="How many commitments are currently out">In use</th><th>Effect / notes</th><th></th></tr></thead><tbody>${g.rows.map(([a,i])=>row(a,i)).join('')||`<tr><td colspan="6" class="hint">No arts yet.</td></tr>`}</tbody></table></div><div class="list-actions"><button data-action="addArt:${esc(g.key)}">+ Add art</button></div></div>`).join('');
+  bind($('#artsGroups'));
+}
+function renderStatic(){
+  $('#bgList').innerHTML=BACKGROUNDS.map(b=>`<option value="${esc(b)}">`).join('');
+  $('#weaponList').innerHTML=ACTIONS.map(a=>`<option value="${esc(a.n)}">`).join('')+WEAPONS.map(w=>`<option value="${esc(w.n)}">`).join('');
+  $('#focusList').innerHTML=FOCI.map(f=>`<option value="${esc(f)}">`).join('');
+  $('#armorSel').innerHTML=opts(ARMORS.map(a=>a.n));$('#shieldSel').innerHTML=opts(SHIELDS.map(s=>s.n));
+  $('#traditionSel').innerHTML=opts(TRADITIONS);$('#partialASel').innerHTML=opts(PARTIAL_NAMES);$('#partialBSel').innerHTML=opts(PARTIAL_NAMES);
+  $('#vowedSel').innerHTML=opts(SKILLS.map(s=>s[0]).filter(s=>!['Stab','Shoot','Punch'].includes(s)));
+}
+function renderAll(){
+  renderAttrs();renderSkills();renderWeapons();renderFoci();renderItems();renderSpells();renderArts();
+  bind(document.body);reload();renderCharSel();recalc();
+}
+function renderCharSel(){const ids=Object.keys(db.characters);$('#charSel').innerHTML=ids.map(id=>`<option value="${id}"${id===db.current?' selected':''}>${esc(db.characters[id].name||'(unnamed)')}</option>`).join('');$('#delBtn').disabled=ids.length<2;}
+
+function out(key,val){$$(`[data-out="${key}"]`).forEach(el=>{el.innerHTML=val;});}
+function meter(key,pct,cls){$$(`[data-meter="${key}"]`).forEach(el=>{el.style.width=clamp(pct,0,100)+'%';el.className=cls||'';});}
+
+function recalc(){
+  const L=level();
+  out('name',esc(C.name)||'<span class="muted">Unnamed</span>');out('classLine',esc(classLine()));out('level',L);
+  const xi=xpInfo();out('xpLine',L>=10?'Max level':`${+C.xp||0}/${xi.need} XP`);out('xpNext',xi.text);meter('xp',xi.pct);
+  ATTRS.forEach(k=>out('mod'+k,sgn(mod(k))));
+  const sp=16-L-bestMod(['STR','CON']),se=16-L-bestMod(['DEX','INT']),sm=16-L-bestMod(['WIS','CHA']),sl=16-L;
+  out('savePhys',sp);out('saveEvade',se);out('saveMental',sm);out('saveLuck',sl);
+  const hpMax=+C.hp.max||0;out('hpMax',hpMax);$('#hpVital').classList.toggle('hp-warn',(+C.hp.cur||0)<=Math.floor(hpMax/3));
+  const strainMax=Math.max(0,(+C.attrs.CON||0)-(+C.strain.perm||0));out('strainMax',strainMax);$('#strainVital').classList.toggle('strain-warn',(+C.strain.cur||0)>=strainMax-1&&strainMax>0);
+  const acr=armorClass();out('ac',acr.ac);out('acNote',esc(acr.note));
+  const atk=attackBonus()+(+C.atkMisc||0);out('atk',sgn(atk));
+  out('atkNote',`Base attack bonus ${sgn(attackBonus())} at level ${L} (${isFullWarrior()?'Warrior: equal to level':isPartialWarriorAtk()?'Partial Warrior progression':'standard progression'})${(+C.atkMisc)?', other '+sgn(+C.atkMisc):''}.`);
+  const init=mod('DEX')+(hasFocus('Alert')?1:0);out('init',sgn(init));
+  const enc=encumbrance();if(!db.settings.encumbrance){enc.move=30;enc.status='Unencumbered';enc.cls='good';}out('move',enc.move);{const mv=$('#moveVital');mv.title=enc.status+(enc.move<30?` — readied ${enc.r}/${enc.rl}, stowed ${enc.s}/${enc.sl} (Gear tab)`:'');mv.querySelector('.big').style.color=enc.cls==='good'?'':`var(--${enc.cls})`;}
+  out('encR',enc.r);out('encS',enc.s);out('encRLim',enc.rl);out('encSLim',enc.sl);
+  meter('encR',enc.rl?enc.r/enc.rl*100:0,enc.r>enc.rl?'crit':'');meter('encS',enc.sl?enc.s/enc.sl*100:0,enc.s>enc.sl?'crit':'');
+  $$('[data-out="encStatus"]').forEach(el=>{el.textContent=enc.status;el.className='pill '+enc.cls;});
+  out('encNote',enc.move?`Move ${enc.move} ft`:'Cannot move under this load');
+  // hit points note
+  const die=`1d6${hpBonus2()?' + 2':''}${mod('CON')?' '+sgn(mod('CON')):''}${hasFocus('Die Hard')?' + 2 (Die Hard)':''} per level, minimum 1 per die.`;
+  out('hpNote',`Hit dice: ${die} At each new level reroll all ${L} dice; keep the new total if higher, otherwise gain +1. Natural healing: ${L} HP per full night's rest.`);
+  // weapons
+  const kb=killingBlow();
+  C.weapons.forEach((w,i)=>{const sk=skillLvl(w.skill),am=mod(w.attr),kind=w.kind||'attack';
+    if(kind!=='attack'){const sc=w.scale||'';let b=+w.bonus||0;if(sc==='heal')b+=Math.max(0,skillLvl('Heal'));if(sc==='magic')b+=Math.max(0,skillLvl('Magic'));if(sc==='level')b+=L;if(sc==='natural')b+=NATURAL_BONUS[L-1];
+      out('wHit'+i,'<span class="muted">—</span>');out('wDmg'+i,(sc==='merciful'?MERCIFUL(L)+' ':'')+((b||sc==='heal'||(+w.bonus))?sgn(b):''));out('wShock'+i,'');return;}
+    const skB=sk<0?-2:sk,hit=atk+skB+am+(+w.bonus||0);out('wHit'+i,sgn(hit)+(sk<0?'<sup class="untr" title="Untrained: −2">✱</sup>':''));
+    let dmgB=am+kb,sc=w.scale||'';if(hasFocus('Armsmaster')&&w.skill==='Stab')dmgB+=Math.max(0,sk);if(hasFocus('Deadeye')&&w.skill==='Shoot')dmgB+=Math.max(0,sk);
+    if(sc==='magic')dmgB+=Math.max(0,skillLvl('Magic'));if(sc==='level')dmgB+=L;if(sc==='natural')dmgB+=NATURAL_BONUS[L-1];
+    out('wDmg'+i,(sc==='vowed'?VOWED_DMG[L-1]+' ':'')+(dmgB?sgn(dmgB):''));
+    const m=/^\s*(\d+)\s*\/\s*(?:AC\s*)?(\d+)/i.exec(w.shock||'');out('wShock'+i,m?`${+m[1]+am+kb+(sc==='natural'?NATURAL_BONUS[L-1]:0)} vs AC≤${m[2]}`:'');});
+  const dn=[];if(kb)dn.push(`Killing Blow adds +${kb} to damage and Shock (included).`);if(hasFocus('Armsmaster'))dn.push('Armsmaster adds Stab to melee damage (included).');if(hasFocus('Deadeye'))dn.push('Deadeye adds Shoot to ranged damage (included).');const scales=new Set(C.weapons.map(w=>w.scale));if(scales.has('magic'))dn.push('Accursed attacks add your Magic skill to damage (included).');if(scales.has('vowed'))dn.push('Vowed strike damage follows your level.');if(scales.has('level'))dn.push('Level-scaled arts add your level to damage (included).');if(scales.has('heal'))dn.push('Healing Touch adds your Heal skill (included).');if(scales.has('natural'))dn.push('Natural weapons gain +1 damage and Shock at levels 3, 6 and 9 (included).');dn.push('Damage and Shock bonuses next to the dice include the attribute modifier. ✱ marks an untrained skill.');out('dmgNote',dn.join(' '));
+  // skills
+  const maxSk=L>=9?4:L>=6?3:L>=3?2:1;
+  SKILLS.forEach(([n])=>{const lv=skillLvl(n),tr=$(`tr[data-skill="${n}"]`);tr.classList.toggle('untrained',lv<0);out('sk'+n,sgn(lv+mod(C.skillAttr[n])));});
+  out('skillNote',`${C.classType==='Expert'||partials().includes('Expert')?'4':'3'} skill points per level. Buying a skill level costs its new level + 1 (level 0 costs 1, level 1 costs 2 …). Highest skill level at level ${L}: ${maxSk}. Attribute raises cost 1, 2, 3, 4, 5 points (five total).`);
+  const fp=fociPicks(),used=C.foci.reduce((s,f)=>s+(+f.level||1),0);
+  out('fociNote',`${used} of ${fp.n} focus levels used${fp.parts.length?' (includes bonus '+fp.parts.join(' and ')+')':''}. Picks at levels 1, 2, 5, 7, 10.`);
+  // class UI visibility
+  $('#traditionField').style.display=C.classType==='Mage'?'':'none';
+  const adv=C.classType==='Adventurer';$('#partialAField').style.display=adv?'':'none';$('#partialBField').style.display=adv?'':'none';
+  $('#vowedField').style.display=adv&&partials().includes('Vowed')?'':'none';
+  $('#features').innerHTML=features().map(f=>`<li>${f}</li>`).join('')||'<li class="hint">No special class features.</li>';
+  // effort
+  const pools=effortPools();
+  $('#effortPanel').style.display=pools.length?'':'none';
+  const poolKey=JSON.stringify(pools.map(p=>p.key+'|'+p.defSkill));
+  if(recalc._poolKey!==poolKey){recalc._poolKey=poolKey;
+    $('#pools').innerHTML=pools.map(p=>`<div class="pool"><div><span class="lbl">${esc(p.label)} effort</span><div class="big num"><span data-out="poolFree:${esc(p.key)}"></span> <span class="muted" style="font-size:1rem">free of <span data-out="poolMax:${esc(p.key)}"></span></span></div></div><div class="formula"><span data-out="poolFormula:${esc(p.key)}"></span><br>Committed: <span data-out="poolCommitted:${esc(p.key)}"></span></div><label class="adj edit-only"><span>Skill</span><select data-bind="effortSkill.${esc(p.key)}" style="width:110px"><option value="">${esc(p.defSkill)} (default)</option>${opts(ALL_SKILLS)}</select></label><label class="adj edit-only"><span>Attribute</span><select data-bind="effortAttr.${esc(p.key)}" style="width:120px"><option value="">${esc(p.defAttrLabel)} (default)</option>${opts(ATTRS)}</select></label><label class="adj"><span>Adjust</span><input type="number" class="play-edit" data-bind="effortAdj.${esc(p.key)}" title="Effort committed to things not listed as arts"></label></div>`).join('');
+    bind($('#pools'));}
+  pools.forEach(p=>{out('poolFree:'+p.key,p.free);out('poolMax:'+p.key,p.max);out('poolFormula:'+p.key,esc(p.formula));out('poolCommitted:'+p.key,p.committed+(p.committed>p.max?' <span class="pill crit">over maximum</span>':''));});
+  $('#effortVitals').innerHTML=pools.map(p=>`<div class="vital"><span class="lbl">${esc(p.label)} effort</span><span class="big magic">${p.free}<span class="sub" style="font-size:.9rem;font-weight:600">/${p.max}</span></span></div>`).join('');
+  // spells
+  const sm2=spellMode();$('#spellPanel').style.display=sm2?'':'none';
+  if(sm2){const prepared=C.spells.filter(s=>s.prepared).length;
+    if(sm2.mode==='invoker'){const t=INVOKER[sm2.table],intm=mod('INT'),pts=t.pts[L-1]+intm,prep=t.prep[L-1]+intm;
+      out('spellNote',`${sm2.label}. Max spell level ${t.maxLvl[L-1]}.`);
+      $('#spellStats').innerHTML=`<div class="field"><span class="lbl">Spell points left</span><div class="tracker"><button class="step" data-step="castsUsed:1">−</button><span class="big num" style="font-size:1.4rem;font-weight:700;color:var(--magic)">${pts-(+C.castsUsed||0)}</span><span class="max">/ ${pts}</span><button class="step" data-step="castsUsed:-1">+</button></div></div><div class="field"><span class="lbl">Prepared</span><span class="big num" style="font-size:1.4rem;font-weight:700">${prepared} <span class="muted" style="font-size:1rem">/ ${prep}</span>${prepared>prep?' <span class="pill crit">too many</span>':''}</span></div>`;
+    }else{const t=SPELL_TABLE[sm2.table][L-1];
+      out('spellNote',`${sm2.label}. Max spell level ${t[0]}. Casting takes a Main Action, a free hand and speech; no casting in armor.`);
+      $('#spellStats').innerHTML=`<div class="field"><span class="lbl">Castings left today</span><div class="tracker"><button class="step" data-step="castsUsed:1" aria-label="Cast a spell">−</button><span class="big num" style="font-size:1.4rem;font-weight:700;color:var(--magic)">${t[1]-(+C.castsUsed||0)}</span><span class="max">/ ${t[1]}</span><button class="step" data-step="castsUsed:-1" aria-label="Undo a casting">+</button></div></div><div class="field"><span class="lbl">Prepared</span><span class="big num" style="font-size:1.4rem;font-weight:700">${prepared} <span class="muted" style="font-size:1rem">/ ${t[2]}</span>${prepared>t[2]?' <span class="pill crit">too many</span>':''}</span></div>`;}
+  }
+  $('#exampleNote').hidden=!C.isExample;
+  renderCharSel();
+}
+
+/* ======================= Actions ======================= */
+function switchTo(id){db.current=id;C=normalize(db.characters[id]);save();renderAll();}
+function addRow(list,obj){C[list].push(obj);save();({weapons:renderWeapons,foci:renderFoci,items:renderItems,spells:renderSpells,arts:renderArts})[list]();recalc();}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.tab){$$('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));$$('[data-panel]').forEach(p=>p.classList.toggle('active',p.dataset.panel===b.dataset.tab));db.tab=b.dataset.tab;save();window.scrollTo({top:0});return;}
+  if(b.dataset.step){const [path,d]=b.dataset.step.split(':');let v=(+getPath(C,path)||0)+(+d);if(path==='hp.cur')v=clamp(v,-99,+C.hp.max||0);if(path==='strain.cur'||path==='castsUsed')v=Math.max(0,v);setPath(C,path,v);save();reload();recalc();return;}
+  if(b.dataset.remove){const [list,i]=b.dataset.remove.split(':');C[list].splice(+i,1);save();({weapons:renderWeapons,foci:renderFoci,items:renderItems,spells:renderSpells,arts:renderArts})[list]();recalc();return;}
+  const a=b.dataset.action;if(!a)return;
+  const [act,arg]=a.split(':');
+  switch(act){
+    case 'addWeapon':addRow('weapons',{name:'',kind:'attack',skill:'Stab',attr:'STR',dmg:'',shock:'',range:'',traits:'',enc:0,readied:false,bonus:0,scale:''});$('#weapons tr:last-child input').focus();break;
+    case 'addFocus':addRow('foci',{name:'',level:1,notes:''});$('#foci .fx:last-child input').focus();break;
+    case 'addItem':addRow('items',{name:'',qty:1,enc:1,loc:arg,notes:''});$('#items tr:last-child input').focus();break;
+    case 'addSpell':addRow('spells',{name:'',level:1,tradition:'',prepared:false,desc:''});$('#spells tr:last-child input:not([type=checkbox])').focus();break;
+    case 'addArt':{addRow('arts',{name:'',pool:arg||(effortPools()[0]||{}).key||'—',cost:1,commit:'Scene',uses:0,desc:''});const inp=$$('#artsGroups input[data-bind$=".name"]').find(x=>x.dataset.bind==='arts.'+(C.arts.length-1)+'.name');if(inp)inp.focus();break;}
+    case 'artUse':{const a2=C.arts[+arg];if(!a2)break;const pool=effortPools().find(p=>p.key===a2.pool);const cost=+a2.cost||0;if(pool&&cost>pool.free){toast(`Not enough ${pool.label} effort: ${pool.free} free, needs ${cost}`);break;}a2.uses=(+a2.uses||0)+1;save();out('artUses'+arg,a2.uses);recalc();break;}
+    case 'artFree':{const a2=C.arts[+arg];if(!a2||!(+a2.uses))break;a2.uses=+a2.uses-1;save();out('artUses'+arg,a2.uses);recalc();break;}
+    case 'endScene':C.arts.forEach(x=>{if(x.commit==='Scene')x.uses=0;});save();renderArts();recalc();toast('Scene ended: scene effort returned');break;
+    case 'rest':{const L=level();C.hp.cur=Math.min(+C.hp.max||0,(+C.hp.cur||0)+L);C.strain.cur=Math.max(0,(+C.strain.cur||0)-1);C.castsUsed=0;C.arts.forEach(x=>{if(x.commit!=='Indefinite')x.uses=0;});save();renderArts();reload();recalc();toast(`Rested: +${L} HP, −1 strain, spells and effort refreshed`);break;}
+    case 'newChar':{const n=newCharacter();db.characters[n.id]=n;db.mode='edit';applyMode();switchTo(n.id);$$('.tabs button')[4].click();$('[data-bind="name"]').focus();toast('New character');break;}
+    case 'dupChar':{const n=JSON.parse(JSON.stringify(C));n.id=uid();n.name=(C.name||'Unnamed')+' (copy)';n.isExample=false;db.characters[n.id]=n;switchTo(n.id);toast('Duplicated');break;}
+    case 'delChar':{if(b.dataset.armed){delete db.characters[C.id];db.current=Object.keys(db.characters)[0];switchTo(db.current);b.textContent='Delete';delete b.dataset.armed;toast('Deleted');}else{b.dataset.armed='1';b.textContent='Really delete? Click again';setTimeout(()=>{b.textContent='Delete';delete b.dataset.armed;},4000);}break;}
+    case 'export':{const blob=new Blob([JSON.stringify(C,null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a2=document.createElement('a');a2.href=u;a2.download=(C.name||'character').replace(/[^\w\-]+/g,'_')+'.wwn.json';document.body.appendChild(a2);a2.click();a2.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);toast('Backup downloaded (if your browser allows downloads)');break;}
+    case 'copy':navigator.clipboard.writeText(JSON.stringify(C,null,2)).then(()=>toast('JSON copied'),()=>{$('#importText').value=JSON.stringify(C,null,2);toast('Clipboard blocked: JSON placed in the import box to copy by hand');});break;
+    case 'print':window.print();break;
+    case 'importText':importJson($('#importText').value);break;
+    case 'pickFile':$('#importFile').click();break;
+  }
+});
+function importJson(text){try{const obj=JSON.parse(text);const list=Array.isArray(obj)?obj:(obj.characters?Object.values(obj.characters):[obj]);let last=null;list.forEach(c=>{if(!c||typeof c!=='object'||!c.attrs)throw new Error('not a character');c=normalize(c);c.id=uid();c.isExample=false;db.characters[c.id]=c;last=c.id;});if(!last)throw new Error('empty');switchTo(last);$('#importText').value='';toast('Imported');}catch(e){toast('Could not import: that is not a character sheet backup');}}
+$('#importFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>importJson(r.result);r.readAsText(f);e.target.value='';});
+$('#charSel').addEventListener('change',e=>switchTo(e.target.value));
+
+function applyMode(){const m=db.mode==='edit'?'edit':'play';document.body.dataset.mode=m;$('#modeBtn').textContent=m==='edit'?'Done editing':'Edit';}
+$('#modeBtn').addEventListener('click',()=>{db.mode=db.mode==='edit'?'play':'edit';save();applyMode();});
+function applySettings(){document.body.dataset.leveling=db.settings.leveling||'xp';$('#levelingSel').value=db.settings.leveling||'xp';document.body.dataset.enc=document.documentElement.dataset.enc=db.settings.encumbrance?'on':'off';$('#encChk').checked=!!db.settings.encumbrance;if(C)recalc();}
+$('#encChk').addEventListener('change',e=>{db.settings.encumbrance=e.target.checked;save();applySettings();toast(e.target.checked?'Encumbrance tracked':'Encumbrance ignored');});
+$('#levelingSel').addEventListener('change',e=>{db.settings.leveling=e.target.value;save();applySettings();toast(e.target.value==='milestone'?'Milestone leveling: XP hidden':'Experience point leveling');});
+
+/* ======================= Boot ======================= */
+loadDb();renderStatic();applyMode();applySettings();C=db.characters[db.current];renderAll();
+const tabBtn=$$('.tabs button').find(b=>b.dataset.tab===db.tab);if(tabBtn)tabBtn.click();
+})();
+</script>
